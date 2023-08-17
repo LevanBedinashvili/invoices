@@ -8,13 +8,16 @@
     <meta charset="utf-8" />
     <title>iPlus | ინვოისები & საგარანტიო</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="" name="description" />
     <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/bpg-square-mtavruli/css/bpg-square-mtavruli.min.css">
 
     <link rel="shortcut icon" href="{{ asset('template/images/favicon.ico') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
     <!-- plugin css -->
+    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+
+
     <link href="{{ asset('template/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- Bootstrap Css -->
@@ -57,7 +60,7 @@
                                     <img src="{{ asset('template/images/logo-light.png') }}" alt="" height="30" width="100px;">
                                 </span>
                         <span class="logo-sm">
-                                    <img src="{{ asset('template/images/logo-light-sm.png') }}" alt="" height="26" width="100px;">
+                                    <img src="{{ asset('template/images/logo-light-sm.png') }}" alt="" height="50" width="100px;">
                                 </span>
                     </a>
                 </div>
@@ -146,13 +149,13 @@
                         <span class="logo-sm">
                         </span>
                 <span class="logo-lg">
-                            <img src="{{ asset('template/azx_crat-75.jpg') }}" alt="" height="28" width="150">
+                            <img src="{{ asset('template/azx_crat-75.jpg') }}" alt="" height="50" width="200">
                         </span>
             </a>
 
             <a href="{{ route('index') }}" class="logo logo-light">
                         <span class="logo-lg">
-                            <img src="{{ asset('template/azx_crat-75.jpg') }}" alt="" height="30" width="150">
+                            <img src="{{ asset('template/azx_crat-75.jpg') }}" alt="" height="50" width="200">
                         </span>
             </a>
         </div>
@@ -195,6 +198,14 @@
 
 
                     <li>
+                        <a href="{{ route('templates.index') }}">
+                            <i class="bx bx-file icon nav-icon"></i>
+                            <span class="menu-item" data-key="t-horizontal">საგარანტიოს დიზაინი</span>
+                        </a>
+                    </li>
+
+
+                    <li>
                         <a href="javascript: void(0);" class="has-arrow">
                             <i class="bx bx-user-circle icon nav-icon"></i>
                             <span class="menu-item" data-key="t-contacts">ადმინ მენეჯმენტი</span>
@@ -225,6 +236,7 @@
                             <li><a href="{{ route('warranty.create') }}" data-key="t-product-detail">საგარანტიოს დამატება</a></li>
                         </ul>
                     </li>
+
                 </ul>
             </div>
             <!-- Sidebar -->
@@ -405,12 +417,15 @@
 
 <!-- Right bar overlay-->
 <div class="rightbar-overlay"></div>
+
 <script src="https://code.jquery.com/jquery-3.7.0.js"> </script>
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"> </script>
 <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"> </script>
 <script>
     new DataTable('#example');
 </script>
+
+
 
 <script src="{{ asset('template/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('template/libs/metismenujs/metismenujs.min.js') }}"></script>

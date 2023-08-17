@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NotificationCreated;
-use App\Http\Middleware\RoleMiddleware;
 use App\Http\Requests\CreateInvoiceRequest;
-use App\Http\Requests\UpdateInvoiceRequest;
 use App\Models\Invoice;
-use App\Models\Branch;
 use App\Models\InvoiceItem;
 use App\Models\Notification;
 use App\Models\Payment_type;
-use App\Models\Warranty;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -49,48 +44,44 @@ class InvoiceController extends Controller
      */
     public function store(CreateInvoiceRequest $request)
     {
+        $user = Auth::user();
 
         $requestData = $request->except('items');
+        $requestData['user_id'] = $user->id;
 
-        $requestData['user_id'] = Auth::user()->id;
-
-        $info = Invoice::create($requestData);
+        $invoice = Invoice::create($requestData);
 
         $request->validate([
             'items' => 'required',
         ]);
+
         $items = $request->items;
 
         foreach ($items as $item) {
-
-            if(!$item['device_discounted_price']) {
-                $device_total_price = $item['device_price'];
-            } else {
-                $device_total_price = $item['device_discounted_price'];
-            }
-
+            $deviceTotalPrice = !$item['device_discounted_price'] ? $item['device_price'] : $item['device_discounted_price'];
 
             $invoiceItemData = [
                 'device_name' => $item['device_name'],
                 'device_code' => $item['device_code'],
+                'device_artikuli_code' => $item['device_artikuli_code'],
                 'device_price' => $item['device_price'],
                 'device_discounted_price' => $item['device_discounted_price'],
-                'device_total_price' => $device_total_price,
-
+                'device_total_price' => $deviceTotalPrice,
             ];
-            $info->items()->create($invoiceItemData);
+
+            $invoice->items()->create($invoiceItemData);
         }
 
+        $notificationMessage = 'დაამატა ინვოისი უნიკალური ნომრით - ' . $invoice->id;
         $notification = new Notification([
-            'user_id' => auth()->user()->id,
-            'message' => 'დაამატა ინვოისი უნიკალური ნომრით - '. $info->id,
+            'user_id' => $user->id,
+            'message' => $notificationMessage,
             'is_seen' => false,
         ]);
         $notification->save();
 
         return redirect()->route('invoice.index')->with('Success', 'ინვოისი წარმატებით დაემატა');
     }
-
     /**
      * Display the specified resource.
      *
@@ -133,8 +124,9 @@ class InvoiceController extends Controller
             'date_of_birth' => 'nullable|date',
             'items' => 'required|array',
             'items.*.device_name' => 'required|string|max:255',
-            'items.*.device_code' => 'required|string|max:255',
             'items.*.device_price' => 'required|numeric|min:0',
+            'items.*.device_artikuli_code' => 'required|string|min:0',
+
         ]);
 
         $invoice->update([
@@ -162,6 +154,7 @@ class InvoiceController extends Controller
                     'device_name' => $itemData['device_name'],
                     'device_code' => $itemData['device_code'],
                     'device_price' => $itemData['device_price'],
+                    'device_artikuli_code' => $itemData['device_artikuli_code'],
                     'device_discounted_price' => $itemData['device_discounted_price'],
                     'device_total_price' => $device_total_price,
                 ]);
@@ -171,6 +164,7 @@ class InvoiceController extends Controller
                 $newItem = new InvoiceItem([
                     'device_name' => $itemData['device_name'],
                     'device_code' => $itemData['device_code'],
+                    'device_artikuli_code' => $itemData['device_artikuli_code'],
                     'device_price' => $itemData['device_price'],
                     'device_discounted_price' => $itemData['device_discounted_price'],
                     'device_total_price' => $device_total_price,
@@ -191,7 +185,7 @@ class InvoiceController extends Controller
         ]);
         $notification->save();
 
-        return redirect()->route('invoice.show', $invoice->id)->with('Success', 'Invoice updated successfully!');
+        return redirect()->route('invoice.show', $invoice->id)->with('Success', 'ინვოისი წარმატებით განახლდა !');
     }
 
     /**

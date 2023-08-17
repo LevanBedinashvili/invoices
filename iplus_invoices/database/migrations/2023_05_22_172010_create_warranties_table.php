@@ -15,6 +15,7 @@ class CreateWarrantiesTable extends Migration
     {
         Schema::create('warranties', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('template_id');
             $table->string('user_id');
             $table->string('first_name');
             $table->string('last_name');

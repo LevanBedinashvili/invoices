@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Middleware\RoleMiddleware;
 use App\Http\Requests\CreateWarrantyRequest;
 use App\Http\Requests\UpdateWarrantyRequest;
 use App\Models\Branch;
 use App\Models\Notification;
+use App\Models\Template;
 use App\Models\Warranty;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -34,7 +34,8 @@ class WarrantyController extends Controller
     public function create()
     {
         $get_all_branches_from_database = Branch::orderBy('id', 'asc')->get();
-        return view('warranties.create', compact('get_all_branches_from_database'));
+        $get_template = Template::orderBy('id', 'asc')->get();
+        return view('warranties.create', compact('get_all_branches_from_database', 'get_template'));
     }
 
     /**
@@ -84,7 +85,8 @@ class WarrantyController extends Controller
     {
         $get_all_branches_from_database = Branch::orderBy('id', 'asc')->get();
         $edit_warranty_data = Warranty::where('id', $id)->firstOrFail();
-        return view('warranties.edit', compact('get_all_branches_from_database','edit_warranty_data'));
+        $get_template = Template::orderBy('id', 'asc')->get();
+        return view('warranties.edit', compact('get_all_branches_from_database','edit_warranty_data', 'get_template'));
     }
 
     /**

@@ -78,6 +78,7 @@
                                     <div id="invoice-items">
                                         @foreach ($invoice->items as $item)
                                             <div class="item">
+                                                <input type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_artikuli_code]" value="{{ $item->device_artikuli_code }}" placeholder="მოწყობილობის არტიკული კოდი">
                                                 <input type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_name]" value="{{ $item->device_name }}" placeholder="მოწყობილობის დასახელება">
                                                 <input type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_code]" value="{{ $item->device_code }}" placeholder="მოწყობილობის IMEI კოდი">
                                                 <input type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_price]" value="{{ $item->device_price }}" placeholder="მოწყობილობის ფასი">
@@ -105,6 +106,13 @@
             var itemIndex = document.querySelectorAll('.item').length + 1;
             var itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
+
+            var device_artikuli_code = document.createElement('input');
+            device_artikuli_code.type = 'text';
+            device_artikuli_code.name = 'items[' + itemIndex + '][device_artikuli_code]';
+            device_artikuli_code.placeholder = 'ნივთის არტიკული კოდი';
+            device_artikuli_code.classList.add('form-control', 'mb-2');
+            itemDiv.appendChild(device_artikuli_code);
 
             var itemNameInput = document.createElement('input');
             itemNameInput.type = 'text';

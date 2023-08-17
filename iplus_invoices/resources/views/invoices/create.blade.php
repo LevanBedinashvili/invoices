@@ -90,6 +90,13 @@
             var itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
 
+            var device_artikuli_code = document.createElement('input');
+            device_artikuli_code.type = 'text';
+            device_artikuli_code.name = 'items[' + itemIndex + '][device_artikuli_code]';
+            device_artikuli_code.placeholder = 'ნივთის არტიკული კოდი';
+            device_artikuli_code.classList.add('form-control', 'mb-2');
+            itemDiv.appendChild(device_artikuli_code);
+
             var itemNameInput = document.createElement('input');
             itemNameInput.type = 'text';
             itemNameInput.name = 'items[' + itemIndex + '][device_name]';

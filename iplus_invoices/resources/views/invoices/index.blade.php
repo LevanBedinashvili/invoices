@@ -42,6 +42,7 @@
                                         <th>თარიღი</th>
                                         <th>ინვოისი</th>
                                         <th>რედაქტირება</th>
+                                        <th style="display: none;">ტესტინგ</th>
 {{--                                        <th>წაშლა</th>--}}
                                     </tr>
                                     </thead>
@@ -71,6 +72,13 @@
 {{--                                                            class="fa fa-trash"></i>წაშლა</button>--}}
 {{--                                                </form>--}}
 {{--                                            </td>--}}
+                                            <td style="display: none;">
+                                                @foreach ($invoice->items as $item)
+                                                <p>
+                                                    {{ $item->device_code }}
+                                                </p>
+                                                @endforeach
+                                            </td>
 
                                         </tr>
                                     @empty

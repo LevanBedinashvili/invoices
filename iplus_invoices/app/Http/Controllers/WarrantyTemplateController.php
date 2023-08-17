@@ -2,30 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Middleware\RoleMiddleware;
-use App\Http\Requests\CreatePaymentRequest;
-use App\Http\Requests\UpdatePaymentRequest;
-use App\Models\Payment_type;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Http\Requests\CreateTemplateRequest;
+use App\Http\Requests\UpdateTemplateRequest;
+use App\Models\Template;
 
-class PaymentController extends Controller
+class WarrantyTemplateController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct()
-    {
-        $this->middleware(RoleMiddleware::class . ':1')->except('index');
-    }
-
-
     public function index()
     {
-        $get_all_payment_types = Payment_type::orderBy('id', 'asc')->get();
-        return view('payments.index', compact('get_all_payment_types'));
+        $get_warranty_templates = Template::orderBy('id', 'desc')->get();
+        return view('warranty_templates.index', compact('get_warranty_templates'));
     }
 
     /**
@@ -44,13 +35,13 @@ class PaymentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreatePaymentRequest $request)
+    public function store(CreateTemplateRequest $request)
     {
         $requestData = $request->all();
 
-        Payment_type::create($requestData);
+        Template::create($requestData);
 
-        return back()->with('Success', 'გადახდის ტიპი წარმატებით დაემატა');
+        return back()->with('Success', 'დიზაინი წარმატებით დაემატა');
     }
 
     /**
@@ -72,24 +63,26 @@ class PaymentController extends Controller
      */
     public function edit($id)
     {
-        $edit_payment_type = Payment_type::where('id', $id)->firstOrFail();
-        return view('payments.edit', compact('edit_payment_type'));
+        $edit_template = Template::where('id', $id)->firstOrFail();
+        return view('warranty_templates.edit', compact('edit_template'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePaymentRequest $request, $id)
+    public function update(UpdateTemplateRequest $request, $id)
     {
+
         $requestData = $request->except('_method', '_token');
 
-        Payment_type::where('id', $id)->update($requestData);
+        Template::where('id', $id)->update($requestData);
 
-        return redirect()->route('payment.index')->with('Success', 'მონაცემთა ბაზა წარმატებით განახლდა');
+        return redirect()->route('templates.index')->with('Success', 'მონაცემთა ბაზა წარმატებით განახლდა');
+
     }
 
     /**

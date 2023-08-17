@@ -62,8 +62,19 @@
                                             @endforelse
                                         </select>
                                     </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">აირჩიეთ დიზაინი</label>
+                                        <select id="inputState" name="template_id" class="default-select form-control wide">
+                                            <option value="{{ $edit_warranty_data->template_id }}" selected>{{ $edit_warranty_data->template->title }}</option>
+                                            @forelse ($get_template as $template_item)
+                                            <option value="{{ $template_item->id }}">{{ $template_item->title }}</option>
+                                            @empty
+                                            <option disabled>დიზაინი არ მოიძებნა</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-info">მონაცემის ცვლილება</button>
+                                <button type="submit" class="btn btn-info">რედაქტირება</button>
                             </form>
                         </div>
                     </div>

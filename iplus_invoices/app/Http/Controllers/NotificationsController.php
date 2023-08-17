@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\RoleMiddleware;
 use App\Models\Notification;
-use Illuminate\Http\Request;
 
 class NotificationsController extends Controller
 {

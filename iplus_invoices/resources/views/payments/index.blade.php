@@ -7,7 +7,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">ფილიალების სია</h4>
+                            <h4 class="card-title">გადახდის ტიპები</h4>
                             @if (session('Error'))
                                 <div class="alert alert-danger">
                                     {{ session('Error') }}

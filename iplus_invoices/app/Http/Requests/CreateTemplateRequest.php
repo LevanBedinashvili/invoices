@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateWarrantyRequest extends FormRequest
+class CreateTemplateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +24,8 @@ class CreateWarrantyRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => ['required'],
-            'last_name' => ['required'],
-            'personal_number' => ['required'],
-            'device_imei_code' => ['required'],
-            'branch_id' => ['required'],
-            'template_id' => ['required'],
+            'title' => 'required',
+            'description' => 'required',
         ];
     }
 }

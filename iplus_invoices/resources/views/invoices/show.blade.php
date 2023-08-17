@@ -11,11 +11,11 @@
                             <div class="invoice-title">
                                 <h4 class="float-end font-size-15">ინვოისი #{{ $invoice->id }} </h4>
                                 <div class="mb-4">
-                                    <img src="{{ asset('template/logo.png') }}" alt="logo" height="150" width="200" style="margin-top: 0px;">
+                                    <img src="{{ asset('template/azx_crat-75.jpg') }}" alt="logo" height="50" width="200" style="margin-top: 0px;">
                                 </div>
                             </div>
 
-                            <hr class="my-4">
+                            <hr class="my-100">
 
                             <div class="row">
                                 <div class="col-sm-6">
@@ -50,12 +50,12 @@
                                 <h5 class="font-size-15">შეკვეთის ინფორმაცია</h5>
 
                                 <div class="table-responsive">
-                                    <table class="table align-middle table-nowrap table-centered mb-0">
+                                    <table class="table align-middle table-centered mb-0">
                                         <thead>
                                             <tr>
                                                 <th class="fw-bold" style="width: 70px;">No.</th>
                                                 <th class="fw-bold">მოწყობილობა</th>
-                                                <th class="fw-bold">IMEI კოდი</th>
+                                                <th class="fw-bold">IMEI კოდი / არტიკული კოდი</th>
                                                 <th class="fw-bold">ფასი</th>
                                                 <th class="text-end fw-bold" style="width: 120px;">ფასდაკლებული ფასი</th>
                                             </tr>
@@ -66,10 +66,12 @@
                                             <th scope="row">{{ $loop->iteration }}</th>
                                             <td>
                                                 <div>
-                                                    <p class="text-muted mb-0">{{ $item->device_name }}</p>
+                                                    <p class="text-muted mb-0" style="word-wrap: break-word;">
+                                                        {{ $item->device_name }}
+                                                    </p>
                                                 </div>
                                             </td>
-                                            <td>{{ $item->device_code }}</td>
+                                            <td>{{ $item->device_code }} / {{ $item->device_artikuli_code }}</td>
                                             <td>{{ $item->device_price }}</td>
                                             <td class="text-end">{{ $item->device_discounted_price }}</td>
                                         </tr>

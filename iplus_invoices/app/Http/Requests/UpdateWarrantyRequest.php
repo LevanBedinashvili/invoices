@@ -29,6 +29,7 @@ class UpdateWarrantyRequest extends FormRequest
             'personal_number' => ['required'],
             'device_imei_code' => ['required'],
             'branch_id' => ['required'],
+            'template_id' => ['required'],
         ];
     }
 }
