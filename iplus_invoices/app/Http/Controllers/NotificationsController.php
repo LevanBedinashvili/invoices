@@ -12,6 +12,7 @@ class NotificationsController extends Controller
     {
         $this->middleware(RoleMiddleware::class . ':1');
     }
+
     public function mark_as_seen()
     {
         $notification = Notification::where('is_seen', '0')->get();
@@ -25,4 +26,17 @@ class NotificationsController extends Controller
         }
         return back();
     }
+
+    public function mark_seen($id)
+    {
+        $update_notification_status = Notification::findOrFail($id);
+
+        if($update_notification_status){
+            $update_notification_status->is_seen = 1;
+            $update_notification_status->save();
+        }
+
+        return back()->with('Success', 'ნოთიფიკაცია მოინიშნა წაკითხულად.');
+    }
+
 }

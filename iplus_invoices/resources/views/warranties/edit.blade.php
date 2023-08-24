@@ -52,6 +52,10 @@
                                         <input type="number" class="form-control" name="device_imei_code" value="{{ $edit_warranty_data->device_imei_code }}" placeholder="შეიყვანეთ პროდუქტის IMEI კოდი">
                                     </div>
                                     <div class="mb-3 col-md-6">
+                                        <label class="form-label">პროდუქტის დასახელება</label>
+                                        <input type="text" class="form-control" name="device_name" value="{{ $edit_warranty_data->device_name }}" placeholder="შეიყვანეთ პროდუქტის დასახელება">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
                                         <label class="form-label">აირჩიეთ ფილიალი</label>
                                         <select id="inputState" name="branch_id" class="default-select form-control wide">
                                             <option value="{{ $edit_warranty_data->branch_id }}" selected>{{ $edit_warranty_data->branch->branch_name }}</option>

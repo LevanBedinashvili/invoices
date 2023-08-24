@@ -14,14 +14,14 @@ class CreateInvoicesTable extends Migration
     public function up()
     {
         Schema::create('invoices', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('payment_type_id');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('personal_number');
-            $table->string('mobile_number');
-            $table->date('date_of_birth');
+            $table->id()->autoIncrement();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('payment_type_id')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('personal_number')->nullable();
+            $table->string('mobile_number')->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

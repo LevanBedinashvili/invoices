@@ -14,14 +14,15 @@ class CreateWarrantiesTable extends Migration
     public function up()
     {
         Schema::create('warranties', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('template_id');
-            $table->string('user_id');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('personal_number');
-            $table->string('branch_id');
-            $table->string('device_imei_code');
+            $table->id()->autoIncrement();
+            $table->unsignedBigInteger('template_id')->nullable();
+            $table->string('user_id')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('personal_number')->nullable();
+            $table->string('branch_id')->nullable();
+            $table->string('device_imei_code')->nullable();
+            $table->string('device_name')->nullable();
             $table->timestamps();
         });
     }

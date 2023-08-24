@@ -51,6 +51,10 @@
                                         <input type="number" class="form-control" name="device_imei_code" placeholder="შეიყვანეთ პროდუქტის IMEI კოდი">
                                     </div>
                                     <div class="mb-3 col-md-6">
+                                        <label class="form-label">პროდუქტის დასახელება</label>
+                                        <input type="text" class="form-control" name="device_name" placeholder="შეიყვანეთ პროდუქტის დასახელება">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
                                         <label class="form-label">აირჩიეთ ფილიალი</label>
                                         <select id="inputState" name="branch_id" class="default-select form-control wide">
                                             @forelse ($get_all_branches_from_database as $branch_item)

@@ -57,14 +57,27 @@ class InvoiceController extends Controller
 
         $items = $request->items;
 
+
         foreach ($items as $item) {
             $deviceTotalPrice = !$item['device_discounted_price'] ? $item['device_price'] : $item['device_discounted_price'];
+
+            $is_deghege_checked = 0;
+
+            if(isset($item['is_deghege'])) {
+                $deviceTotalPrice = $deviceTotalPrice / 1.18;
+                $is_deghege_checked = 1;
+            }
+            else {
+                $deviceTotalPrice;
+                $is_deghege_checked = 0;
+            }
 
             $invoiceItemData = [
                 'device_name' => $item['device_name'],
                 'device_code' => $item['device_code'],
                 'device_artikuli_code' => $item['device_artikuli_code'],
                 'device_price' => $item['device_price'],
+                'is_deghege' => $is_deghege_checked,
                 'device_discounted_price' => $item['device_discounted_price'],
                 'device_total_price' => $deviceTotalPrice,
             ];
@@ -129,6 +142,7 @@ class InvoiceController extends Controller
 
         ]);
 
+
         $invoice->update([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
@@ -141,11 +155,24 @@ class InvoiceController extends Controller
         $updatedItemIds = [];
 
         foreach ($request->input('items') as $itemData) {
+
             if(!$itemData['device_discounted_price']){
                 $device_total_price = $itemData['device_price'];
             } else {
                 $device_total_price = $itemData['device_discounted_price'];
             }
+
+            $is_deghege_checked = 0;
+
+            if(isset($itemData['is_deghege'])) {
+                $device_total_price = $device_total_price / 1.18;
+                $is_deghege_checked = 1;
+            }
+            else {
+                $device_total_price;
+                $is_deghege_checked = 0;
+            }
+
             if (isset($itemData['id']) && in_array($itemData['id'], $existingItemIds)) {
 
                 // Update existing item
@@ -156,6 +183,7 @@ class InvoiceController extends Controller
                     'device_price' => $itemData['device_price'],
                     'device_artikuli_code' => $itemData['device_artikuli_code'],
                     'device_discounted_price' => $itemData['device_discounted_price'],
+                    'is_deghege' => $is_deghege_checked,
                     'device_total_price' => $device_total_price,
                 ]);
                 $updatedItemIds[] = $itemData['id'];
@@ -167,6 +195,7 @@ class InvoiceController extends Controller
                     'device_artikuli_code' => $itemData['device_artikuli_code'],
                     'device_price' => $itemData['device_price'],
                     'device_discounted_price' => $itemData['device_discounted_price'],
+                    'is_deghege' => $is_deghege_checked,
                     'device_total_price' => $device_total_price,
                 ]);
                 $invoice->items()->save($newItem);
@@ -201,5 +230,14 @@ class InvoiceController extends Controller
         $invoice->delete();
 
         return redirect()->back()->with('Success', 'ინვოისი  წარმატებით წაიშალა მონაცემთა ბაზიდან');
+    }
+
+    public function createIfExists($id)
+    {
+        if($id) {
+            $get_all_payment_types = Payment_type::orderBy('id', 'asc')->get();
+            $get_customer_info = Invoice::findOrFail($id);
+            return view('invoices.create', compact('get_all_payment_types', 'get_customer_info'));
+        }
     }
 }

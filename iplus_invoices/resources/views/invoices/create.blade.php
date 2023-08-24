@@ -90,6 +90,17 @@
             var itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
 
+            var is_deghege = document.createElement('input');
+            is_deghege.type = 'checkbox';
+            is_deghege.name = 'items[' + itemIndex + '][is_deghege]';
+            itemDiv.appendChild(is_deghege);
+
+
+            var label = document.createElement('label');
+            label.innerText = 'დღგ /    '; // Replace 'Label Text' with the actual label text
+            label.appendChild(is_deghege); // Append the checkbox as a child of the label
+            itemDiv.appendChild(label); // Append the label (with the checkbox) to the container
+
             var device_artikuli_code = document.createElement('input');
             device_artikuli_code.type = 'text';
             device_artikuli_code.name = 'items[' + itemIndex + '][device_artikuli_code]';

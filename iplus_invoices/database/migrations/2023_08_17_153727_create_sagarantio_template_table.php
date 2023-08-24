@@ -14,10 +14,10 @@ class CreateSagarantioTemplateTable extends Migration
     public function up()
     {
         Schema::create('templates', function (Blueprint $table) {
-            $table->id();
+            $table->id()->autoIncrement();
 
-            $table->string('title');
-            $table->text('description');
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
         });
     }
 

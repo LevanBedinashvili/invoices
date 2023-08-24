@@ -56,7 +56,7 @@
                                                 <th class="fw-bold" style="width: 70px;">No.</th>
                                                 <th class="fw-bold">მოწყობილობა</th>
                                                 <th class="fw-bold">IMEI კოდი / არტიკული კოდი</th>
-                                                <th class="fw-bold">ფასი</th>
+                                                <th class="fw-bold">ფასი | საბოლოო ფასი</th>
                                                 <th class="text-end fw-bold" style="width: 120px;">ფასდაკლებული ფასი</th>
                                             </tr>
                                         </thead><!-- end thead -->
@@ -72,7 +72,7 @@
                                                 </div>
                                             </td>
                                             <td>{{ $item->device_code }} / {{ $item->device_artikuli_code }}</td>
-                                            <td>{{ $item->device_price }}</td>
+                                            <td>{{ $item->device_price }} | {{ $item->device_total_price}}</td>
                                             <td class="text-end">{{ $item->device_discounted_price }}</td>
                                         </tr>
                                         @endforeach

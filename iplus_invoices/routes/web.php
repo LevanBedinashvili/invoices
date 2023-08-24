@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/password', [ProfileController::class, 'change_password'])->name('profile.password');
 
     Route::get('/notifications/mark_as_seen', [NotificationsController::class, 'mark_as_seen'])->name('notification.mark_as_seen');
+    Route::put('/notifications/mark_seen/{id}', [NotificationsController::class, 'mark_seen'])->name('notification.mark_seen');
 
 
     Route::resource('/users', UserController::class);
@@ -44,6 +45,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/warranty', WarrantyController::class);
     Route::resource('/templates', WarrantyTemplateController::class);
     Route::resource('/invoice', InvoiceController::class);
+    Route::get('/invoice/createIfExists/{id}', [InvoiceController::class, 'createIfExists'])->name('invoice.createIfExists');
+
 
     Route::get('/loginout',[LogoutController::class, 'logout'])->name('user.logout');
 });

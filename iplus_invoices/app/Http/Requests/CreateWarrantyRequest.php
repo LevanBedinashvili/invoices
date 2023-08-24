@@ -27,7 +27,8 @@ class CreateWarrantyRequest extends FormRequest
             'first_name' => ['required'],
             'last_name' => ['required'],
             'personal_number' => ['required'],
-            'device_imei_code' => ['required'],
+            'device_imei_code' => ['sometimes'],
+            'device_name' => ['sometimes'],
             'branch_id' => ['required'],
             'template_id' => ['required'],
         ];

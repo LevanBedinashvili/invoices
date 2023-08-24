@@ -9,10 +9,10 @@ class AddNotificationTable extends Migration
     public function up()
     {
         Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
+            $table->id()->autoIncrement();
             $table->unsignedBigInteger('user_id');
-            $table->string('message');
-            $table->boolean('is_seen')->default(false);
+            $table->string('message')->nullable();
+            $table->boolean('is_seen')->default(false)->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

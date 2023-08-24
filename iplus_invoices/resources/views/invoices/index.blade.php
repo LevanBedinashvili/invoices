@@ -40,6 +40,7 @@
                                         <th>პირადი ნომერი</th>
                                         <th>გადახდის ტიპი</th>
                                         <th>თარიღი</th>
+                                        <th>ახალი</th>
                                         <th>ინვოისი</th>
                                         <th>რედაქტირება</th>
                                         <th style="display: none;">ტესტინგ</th>
@@ -55,6 +56,10 @@
                                             <td>{{ $invoice->personal_number }}</td>
                                             <td>{{ $invoice->payment_type->title }}</td>
                                             <td>{{ $invoice->created_at }}</td>
+                                            <td>
+                                                <a href="{{ route('invoice.createIfExists', $invoice->id) }}"
+                                                   class="btn btn-warning shadow btn-xs sharp me-1">ახალი ინვოისი</a>
+                                            </td>
                                             <td>
                                                 <a href="{{ route('invoice.show', $invoice->id) }}"
                                                    class="btn btn-info shadow btn-xs sharp me-1">ინვოისი</a>

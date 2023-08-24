@@ -14,6 +14,7 @@
                                         <h6 class="">მომხმარებლის ინფორმაცია:</h6>
                                         <p style="font-size: 12px;" class="mb-1">სახელი, გვარი: {{ $get_warranty->first_name }} {{ $get_warranty->last_name }}</p>
                                         <p style="font-size: 12px;" class="mb-1">პირადი ნომერი: {{ $get_warranty->personal_number }}</p>
+                                        <p style="font-size: 12px;" class="mb-1">პროდუქტის დასახელება: {{ $get_warranty->device_name }}</p>
                                         <p style="font-size: 12px;" class="mb-1">პროდუქტის IMEI: {{ $get_warranty->device_imei_code }}</p>
                                     </div>
                                 </div>

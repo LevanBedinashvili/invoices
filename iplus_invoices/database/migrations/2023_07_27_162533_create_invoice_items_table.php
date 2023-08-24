@@ -14,8 +14,9 @@ class CreateInvoiceItemsTable extends Migration
     public function up()
     {
         Schema::create('invoice_items', function (Blueprint $table) {
-            $table->id();
+            $table->id()->autoIncrement();
             $table->unsignedBigInteger('invoice_id');
+            $table->integer('is_deghege')->default(0);
             $table->string('device_code')->nullable();
             $table->string('device_artikuli_code')->nullable();
             $table->string('device_name')->nullable();
