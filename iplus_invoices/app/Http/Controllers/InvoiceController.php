@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateInvoiceRequest;
 use App\Models\Invoice;
+use App\Models\Warranty;
 use App\Models\InvoiceItem;
 use App\Models\Notification;
 use App\Models\Payment_type;
@@ -57,11 +58,10 @@ class InvoiceController extends Controller
 
         $items = $request->items;
 
-
         foreach ($items as $item) {
-            $deviceTotalPrice = !$item['device_discounted_price'] ? $item['device_price'] : $item['device_discounted_price'];
-
             $is_deghege_checked = 0;
+            $deviceTotalPrice = $item['device_price'];
+            $discount_type = 0;
 
             if(isset($item['is_deghege'])) {
                 $deviceTotalPrice = $deviceTotalPrice / 1.18;
@@ -72,19 +72,45 @@ class InvoiceController extends Controller
                 $is_deghege_checked = 0;
             }
 
+            $discountType = $item['discount_type'];
+            $discountAmount = $item['device_discounted_price'];
+
+            if ($discountType === 'fixed') {
+                $discount_type = 1;
+                $deviceTotalPrice = $deviceTotalPrice - $discountAmount;
+            } elseif ($discountType === 'percentage') {
+                $discount_type = 2;
+                $deviceTotalPrice = $deviceTotalPrice - ($deviceTotalPrice * ($discountAmount / 100));
+            } else {
+                // No discount
+                $discount_type = 0;
+            }
+
             $invoiceItemData = [
                 'device_name' => $item['device_name'],
                 'device_code' => $item['device_code'],
                 'device_artikuli_code' => $item['device_artikuli_code'],
                 'device_price' => $item['device_price'],
                 'is_deghege' => $is_deghege_checked,
+                'discount_type' => $discount_type,
                 'device_discounted_price' => $item['device_discounted_price'],
                 'device_total_price' => $deviceTotalPrice,
             ];
 
             $invoice->items()->create($invoiceItemData);
-        }
 
+            $sagarantio = new Warranty();
+            $sagarantio->template_id = 0;
+            $sagarantio->user_id = Auth::user()->id;
+            $sagarantio->first_name = $requestData['first_name'];
+            $sagarantio->last_name = $requestData['last_name'];
+            $sagarantio->personal_number = $requestData['personal_number'];
+            $sagarantio->branch_id = 0;
+            $sagarantio->device_imei_code = $item['device_code'];
+            $sagarantio->device_name = $item['device_name'];
+            $sagarantio->save();
+
+        }
         $notificationMessage = 'დაამატა ინვოისი უნიკალური ნომრით - ' . $invoice->id;
         $notification = new Notification([
             'user_id' => $user->id,
@@ -93,7 +119,7 @@ class InvoiceController extends Controller
         ]);
         $notification->save();
 
-        return redirect()->route('invoice.index')->with('Success', 'ინვოისი წარმატებით დაემატა');
+        return redirect()->route('invoice.show', $invoice->id)->with('Success', 'ინვოისი წარმატებით დაემატა !');
     }
     /**
      * Display the specified resource.
@@ -139,9 +165,7 @@ class InvoiceController extends Controller
             'items.*.device_name' => 'required|string|max:255',
             'items.*.device_price' => 'required|numeric|min:0',
             'items.*.device_artikuli_code' => 'required|string|min:0',
-
         ]);
-
 
         $invoice->update([
             'first_name' => $request->input('first_name'),
@@ -156,13 +180,9 @@ class InvoiceController extends Controller
 
         foreach ($request->input('items') as $itemData) {
 
-            if(!$itemData['device_discounted_price']){
-                $device_total_price = $itemData['device_price'];
-            } else {
-                $device_total_price = $itemData['device_discounted_price'];
-            }
-
             $is_deghege_checked = 0;
+            $device_total_price = $itemData['device_price'];
+            $discount_type = 0;
 
             if(isset($itemData['is_deghege'])) {
                 $device_total_price = $device_total_price / 1.18;
@@ -173,9 +193,23 @@ class InvoiceController extends Controller
                 $is_deghege_checked = 0;
             }
 
+            $discountType = $itemData['discount_type'];
+            $discountAmount = $itemData['device_discounted_price'];
+
+            if ($discountType === 'fixed') {
+                $discount_type = 1;
+                $device_total_price = $device_total_price - $discountAmount;
+            } elseif ($discountType === 'percentage') {
+                $discount_type = 2;
+                $device_total_price = $device_total_price - ($device_total_price * ($discountAmount / 100));
+            } else {
+
+                $discount_type = 0;
+                $device_total_price;
+            }
+
             if (isset($itemData['id']) && in_array($itemData['id'], $existingItemIds)) {
 
-                // Update existing item
                 $item = InvoiceItem::find($itemData['id']);
                 $item->update([
                     'device_name' => $itemData['device_name'],
@@ -184,6 +218,7 @@ class InvoiceController extends Controller
                     'device_artikuli_code' => $itemData['device_artikuli_code'],
                     'device_discounted_price' => $itemData['device_discounted_price'],
                     'is_deghege' => $is_deghege_checked,
+                    'discount_type' => $discount_type,
                     'device_total_price' => $device_total_price,
                 ]);
                 $updatedItemIds[] = $itemData['id'];
@@ -196,6 +231,7 @@ class InvoiceController extends Controller
                     'device_price' => $itemData['device_price'],
                     'device_discounted_price' => $itemData['device_discounted_price'],
                     'is_deghege' => $is_deghege_checked,
+                    'discount_type' => $discount_type,
                     'device_total_price' => $device_total_price,
                 ]);
                 $invoice->items()->save($newItem);
@@ -203,13 +239,12 @@ class InvoiceController extends Controller
             }
         }
 
-        // Remove items that are not present in the request
         $itemsToDelete = array_diff($existingItemIds, $updatedItemIds);
         InvoiceItem::whereIn('id', $itemsToDelete)->delete();
 
         $notification = new Notification([
             'user_id' => auth()->user()->id,
-            'message' => 'დაამატა ინვოისი უნიკალური ნომრით - '. $invoice->id,
+            'message' => 'განაახლა ინვოისი უნიკალური ნომრით - '. $invoice->id,
             'is_seen' => false,
         ]);
         $notification->save();
@@ -237,7 +272,7 @@ class InvoiceController extends Controller
         if($id) {
             $get_all_payment_types = Payment_type::orderBy('id', 'asc')->get();
             $get_customer_info = Invoice::findOrFail($id);
-            return view('invoices.create', compact('get_all_payment_types', 'get_customer_info'));
+            return view('invoices.create_second', compact('get_all_payment_types', 'get_customer_info'));
         }
     }
 }

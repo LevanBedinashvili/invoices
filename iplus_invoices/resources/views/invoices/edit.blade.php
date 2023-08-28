@@ -84,6 +84,11 @@
                                                 <input type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_name]" value="{{ $item->device_name }}" placeholder="მოწყობილობის დასახელება">
                                                 <input type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_code]" value="{{ $item->device_code }}" placeholder="მოწყობილობის IMEI კოდი">
                                                 <input type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_price]" value="{{ $item->device_price }}" placeholder="მოწყობილობის ფასი">
+                                                <select class="form-control mb-2" name="items[{{ $loop->index }}][discount_type]">
+                                                    <option value="none">No Discount</option>
+                                                    <option value="fixed" {{ $item->discount_type === 1 ? 'selected' : '' }}>ფიქსირებული თანხა</option>
+                                                    <option value="percentage" {{ $item->discount_type === 2 ? 'selected' : '' }}>პროცენტი</option>
+                                                </select>
                                                 <input type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_discounted_price]" value="{{ $item->device_discounted_price }}" placeholder="ფასდაკლებული ფასი">
                                                 <button type="button" class="btn btn-danger mb-2" onclick="removeItem(this)">წაშლა</button>
                                             </div>

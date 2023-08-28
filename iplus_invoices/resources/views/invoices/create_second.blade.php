@@ -37,31 +37,32 @@
                                         @endif
                                         <div class="mb-3 col-md-6">
                                             <label class="form-label">მომხმარებლის სახელი</label>
-                                            <input type="text" class="form-control" name="first_name" placeholder="შეიყვანეთ მომხმარებლის სახელი">
+                                            <input type="text" class="form-control" name="first_name" placeholder="შეიყვანეთ მომხმარებლის სახელი" value="{{ $get_customer_info->first_name }}">
                                         </div>
                                         <div class="mb-3 col-md-6">
                                             <label class="form-label">მომხმარებლის გვარი</label>
-                                            <input type="text" class="form-control" name="last_name" placeholder="შეიყვანეთ მომხმარებლის გვარი">
+                                            <input type="text" class="form-control" name="last_name" placeholder="შეიყვანეთ მომხმარებლის გვარი" value="{{ $get_customer_info->last_name }}">
                                         </div>
                                         <div class="mb-3 col-md-6">
                                             <label class="form-label">მომხმარებლის პირადი ნომერი</label>
-                                            <input type="number" class="form-control" name="personal_number" placeholder="შეიყვანეთ მომხმარებლის პირადი ნომერი">
+                                            <input type="number" class="form-control" name="personal_number" placeholder="შეიყვანეთ მომხმარებლის პირადი ნომერი" value="{{ $get_customer_info->personal_number }}">
                                         </div>
                                         <div class="mb-3 col-md-6">
                                             <label class="form-label">მომხმარებლის მობილურის ნომერი</label>
-                                            <input type="number" class="form-control" name="mobile_number" placeholder="შეიყვანეთ მომხმარებლის ტელეფონის ნომერი">
+                                            <input type="number" class="form-control" name="mobile_number" placeholder="შეიყვანეთ მომხმარებლის ტელეფონის ნომერი" value="{{ $get_customer_info->mobile_number }}">
                                         </div>
                                         <div class="mb-3 col-md-6">
                                             <label class="form-label">მომხმარებლის დაბადების თარიღი</label>
-                                            <input type="date" class="form-control" name="date_of_birth">
+                                            <input type="date" class="form-control" name="date_of_birth" value="{{ $get_customer_info->date_of_birth }}">
                                         </div>
                                         <div class="mb-3 col-md-6">
                                             <label class="form-label">გადახდის ტიპი</label>
                                             <select id="inputState" name="payment_type_id" class="default-select form-control wide">
-                                                @forelse ($get_all_payment_types as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->title }}</option>
+                                            <option value="{{ $get_customer_info->payment_type_id }}" selected>{{ $get_customer_info->payment_type->title }}</option>
+                                                @forelse ($get_all_payment_types as $item_x)
+                                                    <option value="{{ $item_x->id }}">{{ $item_x->title }}</option>
                                                 @empty
-                                                    <option disabled>გადახდის ტიპები არ მოიძებნა</option>
+                                                    <option disabled>გადახდის ტიპი არ მოიძებნა</option>
                                                 @endforelse
                                             </select>
                                         </div>
