@@ -60,8 +60,7 @@
                                             <td>
                                                 <div class="d-flex">
                                                     <a href="{{ route('warranty.edit', $warranty_item->id) }}"
-                                                       class="btn btn-primary shadow btn-xs sharp me-1"><i
-                                                            class="fas fa-pencil-alt"></i>რედაქტირება</a>
+                                                       class="btn btn-primary shadow btn-xs sharp me-1">რედაქტირება</a>
                                                 </div>
                                             </td>
 {{--                                            <td>--}}

@@ -98,7 +98,7 @@
 
 
             var label = document.createElement('label');
-            label.innerText = 'დიპლომატი /    '; // Replace 'Label Text' with the actual label text
+            label.innerText = 'დელეგატი /    '; // Replace 'Label Text' with the actual label text
             label.appendChild(is_deghege); // Append the checkbox as a child of the label
             itemDiv.appendChild(label); // Append the label (with the checkbox) to the container
 

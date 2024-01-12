@@ -11,6 +11,9 @@
     <meta content="" name="description" />
     <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/bpg-square-mtavruli/css/bpg-square-mtavruli.min.css">
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
     <link rel="shortcut icon" href="{{ asset('template/images/favicon.ico') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
@@ -20,12 +23,15 @@
 
     <link href="{{ asset('template/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet" type="text/css" />
 
+
+
     <!-- Bootstrap Css -->
     <link href="{{ asset('template/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
     <link href="{{ asset('template/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="{{ asset('template/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+
 
     <style>
         * {
@@ -425,6 +431,9 @@
 <!-- Right bar overlay-->
 <div class="rightbar-overlay"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
 <script src="https://code.jquery.com/jquery-3.7.0.js"> </script>
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"> </script>
 <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"> </script>
@@ -433,6 +442,8 @@
 </script>
 
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script src="{{ asset('template/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('template/libs/metismenujs/metismenujs.min.js') }}"></script>
@@ -453,5 +464,10 @@
 
 </body>
 
+<style>
+    #my-select-id{
+        margin-top: 15px;
+    }
+</style>
 
 </html>

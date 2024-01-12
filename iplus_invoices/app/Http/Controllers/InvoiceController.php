@@ -86,10 +86,16 @@ class InvoiceController extends Controller
                 $discount_type = 0;
             }
 
+            $name_code = $item['product_name_code'];
+
+            $product_parts = explode(' - ', $name_code);
+            $product_name = $product_parts[0];
+            $product_code = $product_parts[1];
+
             $invoiceItemData = [
-                'device_name' => $item['device_name'],
+                'device_name' => $product_name,
                 'device_code' => $item['device_code'],
-                'device_artikuli_code' => $item['device_artikuli_code'],
+                'device_artikuli_code' => $product_code,
                 'device_price' => $item['device_price'],
                 'is_deghege' => $is_deghege_checked,
                 'discount_type' => $discount_type,
@@ -107,7 +113,7 @@ class InvoiceController extends Controller
             $sagarantio->personal_number = $requestData['personal_number'];
             $sagarantio->branch_id = 0;
             $sagarantio->device_imei_code = $item['device_code'];
-            $sagarantio->device_name = $item['device_name'];
+            $sagarantio->device_name = $product_name;
             $sagarantio->save();
 
         }
@@ -165,6 +171,8 @@ class InvoiceController extends Controller
             'items.*.device_name' => 'required|string|max:255',
             'items.*.device_price' => 'required|numeric|min:0',
             'items.*.device_artikuli_code' => 'required|string|min:0',
+            'items.*.product_name_code' => 'required|string|min:0',
+
         ]);
 
         $invoice->update([
@@ -183,6 +191,11 @@ class InvoiceController extends Controller
             $is_deghege_checked = 0;
             $device_total_price = $itemData['device_price'];
             $discount_type = 0;
+
+
+            $name_code = $itemData['product_name_code'];
+
+            dd($name_code);
 
             if(isset($itemData['is_deghege'])) {
                 $device_total_price = $device_total_price / 1.18;
@@ -275,4 +288,5 @@ class InvoiceController extends Controller
             return view('invoices.create_second', compact('get_all_payment_types', 'get_customer_info'));
         }
     }
+
 }
