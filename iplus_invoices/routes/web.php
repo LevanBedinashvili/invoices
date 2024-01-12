@@ -10,6 +10,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WarrantyTemplateController;
+use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('/users', UserController::class);
     Route::resource('/branch', BranchController::class);
+    Route::resource('/product', ProductsController::class);
     Route::resource('/payment',  PaymentController::class);
     Route::resource('/warranty', WarrantyController::class);
     Route::resource('/templates', WarrantyTemplateController::class);

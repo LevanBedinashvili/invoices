@@ -188,6 +188,13 @@
                     </li>
 
 
+                    <li>
+                        <a href="{{ route('product.index') }}">
+                            <i class="bx bx-file icon nav-icon"></i>
+                            <span class="menu-item" data-key="t-horizontal">პროდუქტები</span>
+                        </a>
+                    </li>
+
 
                     <li>
                         <a href="{{ route('payment.index') }}">

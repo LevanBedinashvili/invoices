@@ -79,7 +79,7 @@
                                         @foreach ($invoice->items as $item)
                                             <div class="item">
                                                 <input type="checkbox" class="form-check-input" name="items[{{ $loop->index }}][is_deghege]" {{ $item->is_deghege ? 'checked' : '' }}>
-                                                <label class="form-check-label">დღგ</label>
+                                                <label class="form-check-label">დიპლომატი</label>
                                                 <input type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_artikuli_code]" value="{{ $item->device_artikuli_code }}" placeholder="მოწყობილობის არტიკული კოდი">
                                                 <input type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_name]" value="{{ $item->device_name }}" placeholder="მოწყობილობის დასახელება">
                                                 <input type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_code]" value="{{ $item->device_code }}" placeholder="მოწყობილობის IMEI კოდი">
@@ -120,7 +120,7 @@
             itemDiv.appendChild(is_deghege);
 
             var label = document.createElement('label');
-            label.innerText = 'დღგ /    ';
+            label.innerText = 'დიპლომატი /    ';
             label.appendChild(is_deghege);
             itemDiv.appendChild(label);
 
