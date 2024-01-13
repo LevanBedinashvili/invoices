@@ -13,4 +13,11 @@ class GetProductItemController extends Controller
         $items = Product::all();
         return response()->json($items);
     }
+
+
+    public function edit($itemId)
+    {
+        $item = Product::find($itemId);
+        return view('invoices.edit.blade.php', compact('item'));
+    }
 }

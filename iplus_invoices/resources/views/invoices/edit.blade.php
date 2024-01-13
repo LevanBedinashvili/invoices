@@ -79,10 +79,16 @@
                                         @foreach ($invoice->items as $item)
                                             <div class="item">
                                                 <input type="checkbox" class="form-check-input" name="items[{{ $loop->index }}][is_deghege]" {{ $item->is_deghege ? 'checked' : '' }}>
-                                                <label class="form-check-label">დელეგატი</label>
-                                                <input type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_artikuli_code]" value="{{ $item->device_artikuli_code }}" placeholder="მოწყობილობის არტიკული კოდი">
-                                                <input type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_name]" value="{{ $item->device_name }}" placeholder="მოწყობილობის დასახელება">
-                                                <input type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_code]" value="{{ $item->device_code }}" placeholder="მოწყობილობის IMEI კოდი">
+                                                <label class="form-check-label">დიპლომატიური</label>
+                                                <select id="my-select-id2" class="default-select form-control wide myselectclass" name="items[{{ $loop->index }}][product_name_code]">
+                                                    <option value="{{ $item->product->name }} - {{ $item->product->code }} - {{ $item->product->id }}" selected>{{ $item->product->name }} - {{ $item->product->code }} - {{ $item->product->id }}</option>
+                                                    @forelse ($get_products as $product_item)
+                                                    <option value="{{ $product_item->name }} - {{ $product_item->code }} - {{ $product_item->id }}">{{ $product_item->name }} - {{ $product_item->code }} - {{ $product_item->id }}</option>
+                                                    @empty
+                                                    <option disabled>პროდუქტები არ მოიძებნა</option>
+                                                    @endforelse
+                                                </select>
+                                                <input style="margin-top: 10px;" type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_code]" value="{{ $item->device_code }}" placeholder="მოწყობილობის IMEI კოდი">
                                                 <input type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_price]" value="{{ $item->device_price }}" placeholder="მოწყობილობის ფასი">
                                                 <select class="form-control mb-2" name="items[{{ $loop->index }}][discount_type]">
                                                     <option value="none">No Discount</option>
@@ -108,7 +114,18 @@
     </div>
 
     <script>
-        // JavaScript function to add new item input fields
+        function onDOMContentLoaded() {
+            $('.myselectclass').each(function () {
+                $(this).select2();
+            });
+        }
+        document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
+    </script>
+
+    <script>
+
+        const items = @json(route('getItems'));
+
         function addNewItem() {
             var itemIndex = document.querySelectorAll('.item').length + 1;
             var itemDiv = document.createElement('div');
@@ -119,30 +136,36 @@
             is_deghege.name = 'items[' + itemIndex + '][is_deghege]';
             itemDiv.appendChild(is_deghege);
 
+
             var label = document.createElement('label');
-            label.innerText = 'დელეგატი /    ';
+            label.innerText = 'დიპლომატიური /    ';
             label.appendChild(is_deghege);
             itemDiv.appendChild(label);
 
-            var device_artikuli_code = document.createElement('input');
-            device_artikuli_code.type = 'text';
-            device_artikuli_code.name = 'items[' + itemIndex + '][device_artikuli_code]';
-            device_artikuli_code.placeholder = 'ნივთის არტიკული კოდი';
-            device_artikuli_code.classList.add('form-control', 'mb-2');
-            itemDiv.appendChild(device_artikuli_code);
+            var productSelect = document.createElement('select');
+            productSelect.name = 'items[' + itemIndex + '][product_name_code]';
+            productSelect.id = "my-select-id";
+            productSelect.classList.add('form-control', 'mb-2');
 
-            var itemNameInput = document.createElement('input');
-            itemNameInput.type = 'text';
-            itemNameInput.name = 'items[' + itemIndex + '][device_name]';
-            itemNameInput.placeholder = 'ნივთის დასახელება';
-            itemNameInput.classList.add('form-control', 'mb-2');
-            itemDiv.appendChild(itemNameInput);
+            fetch(items)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(product => {
+                        var option = document.createElement('option');
+                        option.value = product.name+' - '+product.code+' - '+product.id;
+                        option.text = product.name+' - '+product.code+' - '+product.id;
+                        productSelect.appendChild(option);
+                    });
+                 window.jQuery('#my-select-id').select2();
+            });
+            itemDiv.appendChild(productSelect);
 
             var itemImeiCode = document.createElement('input');
             itemImeiCode.type = 'text';
             itemImeiCode.name = 'items[' + itemIndex + '][device_code]';
             itemImeiCode.placeholder = 'ნივთის IMEI კოდი';
             itemImeiCode.classList.add('form-control', 'mb-2');
+            itemImeiCode.style.marginTop = '10px';
             itemDiv.appendChild(itemImeiCode);
 
             var priceInput = document.createElement('input');
@@ -152,10 +175,20 @@
             priceInput.classList.add('form-control', 'mb-2');
             itemDiv.appendChild(priceInput);
 
+            var discountTypeSelect = document.createElement('select');
+            discountTypeSelect.name = 'items[' + itemIndex + '][discount_type]';
+            discountTypeSelect.classList.add('form-control', 'mb-2');
+            discountTypeSelect.innerHTML = `
+                <option value="none">No Discount</option>
+                <option value="fixed">ფიქსირებული თანხა</option>
+                <option value="percentage">პროცენტი</option>
+            `;
+            itemDiv.appendChild(discountTypeSelect);
+
             var discountPrice = document.createElement('input');
             discountPrice.type = 'text';
             discountPrice.name = 'items[' + itemIndex + '][device_discounted_price]';
-            discountPrice.placeholder = 'ფასდაკლებული თანხა';
+            discountPrice.placeholder = 'ფასდაკლება';
             discountPrice.classList.add('form-control', 'mb-2');
             itemDiv.appendChild(discountPrice);
 
@@ -175,6 +208,4 @@
             btn.closest('.item').remove();
         }
     </script>
-
-
 @endsection

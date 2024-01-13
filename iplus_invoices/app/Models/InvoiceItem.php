@@ -18,4 +18,10 @@ class InvoiceItem extends Model
     {
         return $this->belongsTo(Invoice::class);
     }
+
+
+    function product()
+    {
+        return $this->belongsTo('App\Models\Product');
+    }
 }

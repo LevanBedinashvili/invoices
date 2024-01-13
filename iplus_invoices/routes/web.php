@@ -38,6 +38,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/invoice', InvoiceController::class);
     Route::get('/getItems', [GetProductItemController::class, 'getItems'])->name('getItems');;
 
+
+
     Route::get('/invoice/createIfExists/{id}', [InvoiceController::class, 'createIfExists'])->name('invoice.createIfExists');
 
 

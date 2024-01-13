@@ -85,7 +85,9 @@
     </div>
 
     <script>
-        // JavaScript function to add new item input fields
+
+        const items = @json(route('getItems'));
+
         function addNewItem() {
             var itemIndex = document.querySelectorAll('.item').length + 1;
             var itemDiv = document.createElement('div');
@@ -98,29 +100,34 @@
 
 
             var label = document.createElement('label');
-            label.innerText = 'დელეგატი /    '; // Replace 'Label Text' with the actual label text
-            label.appendChild(is_deghege); // Append the checkbox as a child of the label
-            itemDiv.appendChild(label); // Append the label (with the checkbox) to the container
+            label.innerText = 'დიპლომატიური /    ';
+            label.appendChild(is_deghege);
+            itemDiv.appendChild(label);
 
-            var device_artikuli_code = document.createElement('input');
-            device_artikuli_code.type = 'text';
-            device_artikuli_code.name = 'items[' + itemIndex + '][device_artikuli_code]';
-            device_artikuli_code.placeholder = 'ნივთის არტიკული კოდი';
-            device_artikuli_code.classList.add('form-control', 'mb-2');
-            itemDiv.appendChild(device_artikuli_code);
+            var productSelect = document.createElement('select');
+            productSelect.name = 'items[' + itemIndex + '][product_name_code]';
+            productSelect.id = "my-select-id";
+            productSelect.classList.add('form-control', 'mb-2');
 
-            var itemNameInput = document.createElement('input');
-            itemNameInput.type = 'text';
-            itemNameInput.name = 'items[' + itemIndex + '][device_name]';
-            itemNameInput.placeholder = 'ნივთის დასახელება';
-            itemNameInput.classList.add('form-control', 'mb-2');
-            itemDiv.appendChild(itemNameInput);
+            fetch(items)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(product => {
+                        var option = document.createElement('option');
+                        option.value = product.name+' - '+product.code+' - '+product.id;
+                        option.text = product.name+' - '+product.code+' - '+product.id;
+                        productSelect.appendChild(option);
+                    });
+                 window.jQuery('#my-select-id').select2();
+            });
+            itemDiv.appendChild(productSelect);
 
             var itemImeiCode = document.createElement('input');
             itemImeiCode.type = 'text';
             itemImeiCode.name = 'items[' + itemIndex + '][device_code]';
             itemImeiCode.placeholder = 'ნივთის IMEI კოდი';
             itemImeiCode.classList.add('form-control', 'mb-2');
+            itemImeiCode.style.marginTop = '10px';
             itemDiv.appendChild(itemImeiCode);
 
             var priceInput = document.createElement('input');

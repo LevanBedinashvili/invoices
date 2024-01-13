@@ -89,7 +89,6 @@
 
 
     <script>
-        // JavaScript function to add new item input fields
 
         const items = @json(route('getItems'));
 
@@ -105,7 +104,7 @@
 
 
             var label = document.createElement('label');
-            label.innerText = 'დელეგატი /    ';
+            label.innerText = 'დიპლომატიური /    ';
             label.appendChild(is_deghege);
             itemDiv.appendChild(label);
 
@@ -119,8 +118,8 @@
                 .then(data => {
                     data.forEach(product => {
                         var option = document.createElement('option');
-                        option.value = product.name+' - '+product.code;;
-                        option.text = product.name+' - '+product.code;
+                        option.value = product.name+' - '+product.code+' - '+product.id;
+                        option.text = product.name+' - '+product.code+' - '+product.id;
                         productSelect.appendChild(option);
                     });
                  window.jQuery('#my-select-id').select2();
@@ -136,7 +135,7 @@
             itemDiv.appendChild(itemImeiCode);
 
             var priceInput = document.createElement('input');
-            priceInput.type = 'text';
+            priceInput.type = 'number';
             priceInput.name = 'items[' + itemIndex + '][device_price]';
             priceInput.placeholder = 'ფასი';
             priceInput.classList.add('form-control', 'mb-2');
@@ -153,7 +152,7 @@
             itemDiv.appendChild(discountTypeSelect);
 
             var discountPrice = document.createElement('input');
-            discountPrice.type = 'text';
+            discountPrice.type = 'number';
             discountPrice.name = 'items[' + itemIndex + '][device_discounted_price]';
             discountPrice.placeholder = 'ფასდაკლება';
             discountPrice.classList.add('form-control', 'mb-2');

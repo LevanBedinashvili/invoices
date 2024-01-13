@@ -23,6 +23,7 @@ class CreateWarrantiesTable extends Migration
             $table->string('branch_id')->nullable();
             $table->string('device_imei_code')->nullable();
             $table->string('device_name')->nullable();
+            $table->integer('invoice_id')->nullable();
             $table->timestamps();
         });
     }

@@ -8,6 +8,7 @@ use App\Models\Warranty;
 use App\Models\InvoiceItem;
 use App\Models\Notification;
 use App\Models\Payment_type;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -91,6 +92,7 @@ class InvoiceController extends Controller
             $product_parts = explode(' - ', $name_code);
             $product_name = $product_parts[0];
             $product_code = $product_parts[1];
+            $product_id = $product_parts[2];
 
             $invoiceItemData = [
                 'device_name' => $product_name,
@@ -98,6 +100,7 @@ class InvoiceController extends Controller
                 'device_artikuli_code' => $product_code,
                 'device_price' => $item['device_price'],
                 'is_deghege' => $is_deghege_checked,
+                'product_id' => $product_id,
                 'discount_type' => $discount_type,
                 'device_discounted_price' => $item['device_discounted_price'],
                 'device_total_price' => $deviceTotalPrice,
@@ -114,6 +117,7 @@ class InvoiceController extends Controller
             $sagarantio->branch_id = 0;
             $sagarantio->device_imei_code = $item['device_code'];
             $sagarantio->device_name = $product_name;
+            $sagarantio->invoice_id = $invoice->id;
             $sagarantio->save();
 
         }
@@ -149,7 +153,8 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::where('id', $invoice->id)->firstOrFail();
         $get_all_payment_types = Payment_type::orderBy('id', 'asc')->get();
-        return view('invoices.edit', compact('invoice', 'get_all_payment_types'));
+        $get_products = Product::orderBy('id', 'asc')->get();
+        return view('invoices.edit', compact('invoice', 'get_all_payment_types', 'get_products'));
     }
 
     /**
@@ -168,11 +173,8 @@ class InvoiceController extends Controller
             'mobile_number' => 'required|string|max:255',
             'date_of_birth' => 'nullable|date',
             'items' => 'required|array',
-            'items.*.device_name' => 'required|string|max:255',
             'items.*.device_price' => 'required|numeric|min:0',
-            'items.*.device_artikuli_code' => 'required|string|min:0',
             'items.*.product_name_code' => 'required|string|min:0',
-
         ]);
 
         $invoice->update([
@@ -191,11 +193,6 @@ class InvoiceController extends Controller
             $is_deghege_checked = 0;
             $device_total_price = $itemData['device_price'];
             $discount_type = 0;
-
-
-            $name_code = $itemData['product_name_code'];
-
-            dd($name_code);
 
             if(isset($itemData['is_deghege'])) {
                 $device_total_price = $device_total_price / 1.18;
@@ -221,14 +218,23 @@ class InvoiceController extends Controller
                 $device_total_price;
             }
 
+
+            $name_code = $itemData['product_name_code'];
+
+            $product_parts = explode(' - ', $name_code);
+            $product_name = $product_parts[0];
+            $product_code = $product_parts[1];
+            $product_id = $product_parts[2];
+
             if (isset($itemData['id']) && in_array($itemData['id'], $existingItemIds)) {
 
                 $item = InvoiceItem::find($itemData['id']);
                 $item->update([
-                    'device_name' => $itemData['device_name'],
+                    'device_name' => $product_name,
                     'device_code' => $itemData['device_code'],
                     'device_price' => $itemData['device_price'],
-                    'device_artikuli_code' => $itemData['device_artikuli_code'],
+                    'device_artikuli_code' => $product_code,
+                    'product_id' => $product_id,
                     'device_discounted_price' => $itemData['device_discounted_price'],
                     'is_deghege' => $is_deghege_checked,
                     'discount_type' => $discount_type,
@@ -236,12 +242,12 @@ class InvoiceController extends Controller
                 ]);
                 $updatedItemIds[] = $itemData['id'];
             } else {
-                // Create new item
                 $newItem = new InvoiceItem([
-                    'device_name' => $itemData['device_name'],
+                    'device_name' => $product_name,
                     'device_code' => $itemData['device_code'],
-                    'device_artikuli_code' => $itemData['device_artikuli_code'],
                     'device_price' => $itemData['device_price'],
+                    'device_artikuli_code' => $product_code,
+                    'product_id' => $product_id,
                     'device_discounted_price' => $itemData['device_discounted_price'],
                     'is_deghege' => $is_deghege_checked,
                     'discount_type' => $discount_type,
@@ -273,11 +279,12 @@ class InvoiceController extends Controller
      */
     public function destroy($id)
     {
+
         $invoice = Invoice::findOrFail($id);
 
         $invoice->delete();
 
-        return redirect()->back()->with('Success', 'ინვოისი  წარმატებით წაიშალა მონაცემთა ბაზიდან');
+        return redirect()->back()->with('Success', 'ინვოისი წარმატებით წაიშალა მონაცემთა ბაზიდან');
     }
 
     public function createIfExists($id)
