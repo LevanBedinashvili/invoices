@@ -29,13 +29,22 @@
                                     <div class="text-muted">
                                         <p class="mb-1">დაბადების თარიღი: {{ $invoice->date_of_birth }}</p>
                                         <p class="mb-1">მობილურის ნომერი: {{ $invoice->mobile_number }}</p>
-                                        <p>პირადი ნომერი: {{ $invoice->personal_number }}</p>
                                     </div>
 
                                 </div>
                                 <!-- end col -->
                                 <div class="col-sm-6">
                                     <div class="text-muted text-sm-end">
+                                        @if($invoice->comment != null)
+                                        <div class="mt-4">
+                                            <h5 class="font-size-15 mb-1">კონსულტანტი:</h5>
+                                            <p>{{ $invoice->comment }}</p>
+                                        </div>
+                                        @endif
+                                        <div class="mt-4">
+                                            <h5 class="font-size-15 mb-1">კონსულტანტი:</h5>
+                                            <p>{{ $invoice->user->name }}</p>
+                                        </div>
                                         <div class="mt-4">
                                             <h5 class="font-size-15 mb-1">ინვოისის თარიღი:</h5>
                                             <p>{{ $invoice->created_at }}</p>

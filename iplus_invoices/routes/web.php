@@ -12,8 +12,15 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WarrantyTemplateController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\GetProductItemController;
+use App\Http\Controllers\SmsController;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/sms', [SmsController::class, 'sendSms']);
+Route::get('/getbalance', [SmsController::class, 'getBalance']);
+Route::get('/rs', [SmsController::class, 'getPersonStatus']);
+
 
 Auth::routes();
 
@@ -37,6 +44,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/templates', WarrantyTemplateController::class);
     Route::resource('/invoice', InvoiceController::class);
     Route::get('/getItems', [GetProductItemController::class, 'getItems'])->name('getItems');;
+    Route::get('/getBranchItems', [GetProductItemController::class, 'getBranchItems'])->name('getBranchItems');;
+    Route::get('/getTemplateItems', [GetProductItemController::class, 'getTemplateItems'])->name('getTemplateItems');;
 
 
 

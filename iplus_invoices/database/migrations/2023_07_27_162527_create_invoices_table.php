@@ -17,13 +17,14 @@ class CreateInvoicesTable extends Migration
             $table->id()->autoIncrement();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('payment_type_id')->nullable();
+            $table->unsignedBigInteger('branch_id')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('personal_number')->nullable();
             $table->string('mobile_number')->nullable();
+            $table->string('comment')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->timestamps();
-
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('payment_type_id')->references('id')->on('payment_types')->onDelete('cascade');
         });

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Branch;
+use App\Models\Template;
 
 
 class GetProductItemController extends Controller
@@ -14,10 +16,15 @@ class GetProductItemController extends Controller
         return response()->json($items);
     }
 
-
-    public function edit($itemId)
+    public function getBranchItems()
     {
-        $item = Product::find($itemId);
-        return view('invoices.edit.blade.php', compact('item'));
+        $branchitems = Branch::all();
+        return response()->json($branchitems);
+    }
+
+    public function getTemplateItems()
+    {
+        $templateitems = Template::all();
+        return response()->json($templateitems);
     }
 }

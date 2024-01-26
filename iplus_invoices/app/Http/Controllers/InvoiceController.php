@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\Warranty;
 use App\Models\InvoiceItem;
 use App\Models\Notification;
+use App\Models\Branch;
 use App\Models\Payment_type;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -35,7 +36,8 @@ class InvoiceController extends Controller
     public function create()
     {
         $get_all_payment_types = Payment_type::orderBy('id', 'asc')->get();
-        return view('invoices.create', compact('get_all_payment_types'));
+        $get_all_branches = Branch::orderBy('id', 'asc')->get();
+        return view('invoices.create', compact('get_all_payment_types', 'get_all_branches'));
     }
 
     /**
@@ -57,6 +59,7 @@ class InvoiceController extends Controller
             'items' => 'required',
         ]);
 
+        $branch_id = $request->branch_id;
         $items = $request->items;
 
         foreach ($items as $item) {
@@ -94,6 +97,7 @@ class InvoiceController extends Controller
             $product_code = $product_parts[1];
             $product_id = $product_parts[2];
 
+
             $invoiceItemData = [
                 'device_name' => $product_name,
                 'device_code' => $item['device_code'],
@@ -104,17 +108,19 @@ class InvoiceController extends Controller
                 'discount_type' => $discount_type,
                 'device_discounted_price' => $item['device_discounted_price'],
                 'device_total_price' => $deviceTotalPrice,
+                'template_id' => $item['template_item'],
+
             ];
 
             $invoice->items()->create($invoiceItemData);
 
             $sagarantio = new Warranty();
-            $sagarantio->template_id = 0;
+            $sagarantio->template_id = $item['template_item'];
             $sagarantio->user_id = Auth::user()->id;
             $sagarantio->first_name = $requestData['first_name'];
             $sagarantio->last_name = $requestData['last_name'];
             $sagarantio->personal_number = $requestData['personal_number'];
-            $sagarantio->branch_id = 0;
+            $sagarantio->branch_id = $branch_id;
             $sagarantio->device_imei_code = $item['device_code'];
             $sagarantio->device_name = $product_name;
             $sagarantio->invoice_id = $invoice->id;
@@ -154,7 +160,8 @@ class InvoiceController extends Controller
         $invoice = Invoice::where('id', $invoice->id)->firstOrFail();
         $get_all_payment_types = Payment_type::orderBy('id', 'asc')->get();
         $get_products = Product::orderBy('id', 'asc')->get();
-        return view('invoices.edit', compact('invoice', 'get_all_payment_types', 'get_products'));
+        $get_all_branches = Branch::orderBy('id', 'asc')->get();
+        return view('invoices.edit', compact('invoice', 'get_all_payment_types', 'get_products', 'get_all_branches'));
     }
 
     /**
@@ -172,6 +179,8 @@ class InvoiceController extends Controller
             'personal_number' => 'required|string|max:255',
             'mobile_number' => 'required|string|max:255',
             'date_of_birth' => 'nullable|date',
+            'branch_id' => 'required',
+            'comment' => 'sometimes',
             'items' => 'required|array',
             'items.*.device_price' => 'required|numeric|min:0',
             'items.*.product_name_code' => 'required|string|min:0',
@@ -183,6 +192,8 @@ class InvoiceController extends Controller
             'personal_number' => $request->input('personal_number'),
             'mobile_number' => $request->input('mobile_number'),
             'date_of_birth' => $request->input('date_of_birth'),
+            'branch_id' => $request->input('branch_id'),
+            'comment' => $request->input('comment'),
         ]);
 
         $existingItemIds = $invoice->items->pluck('id')->toArray();
@@ -292,7 +303,8 @@ class InvoiceController extends Controller
         if($id) {
             $get_all_payment_types = Payment_type::orderBy('id', 'asc')->get();
             $get_customer_info = Invoice::findOrFail($id);
-            return view('invoices.create_second', compact('get_all_payment_types', 'get_customer_info'));
+            $get_all_branches = Branch::orderBy('id', 'asc')->get();
+            return view('invoices.create_second', compact('get_all_payment_types', 'get_customer_info', 'get_all_branches'));
         }
     }
 

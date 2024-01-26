@@ -66,6 +66,22 @@
                                                 @endforelse
                                             </select>
                                         </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">ფილიალი</label>
+                                            <select id="inputState" name="branch_id" class="default-select form-control wide">
+                                                @forelse ($get_all_branches as $itemx)
+                                                    <option value="{{ $itemx->id }}">{{ $itemx->branch_name }}</option>
+                                                @empty
+                                                    <option disabled>ფილიალი არ მოიძებნა</option>
+                                                @endforelse
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">კომენტარი</label>
+                                            <input type="text" class="form-control" name="comment">
+                                        </div>
                                     </div>
                                     <h5 style="margin-top: 50px;">ინვოისის ნივთები</h5>
                                     <div id="invoice-items">
@@ -73,7 +89,11 @@
                                     </div>
                                     <button type="button" onclick="addNewItem()" class="btn btn-info">ნივთის დამატება</button>
                                     <br><br>
-
+                                    <div class="mb-3 col-md-6">
+                                        <button type="button" onclick="calculateTotal()" class="btn btn-warning">ფასის გამოთვლა</button>
+                                        <p style="color: red; margin-top: 3px; display: none;" id="price-text"></p>
+                                        <br><br>
+                                    </div>
                                     <button type="submit" class="btn btn-primary">ინვოისის დამატება</button>
                                 </form>
                             </div>
@@ -84,9 +104,24 @@
         </div>
     </div>
 
+
+
+    <script>
+        function onDOMContentLoaded() {
+            $('.myselectclass').each(function () {
+                $(this).select2();
+            });
+        }
+        document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
+    </script>
+
     <script>
 
         const items = @json(route('getItems'));
+        const templateItems = @json(route('getTemplateItems'));
+
+        let totalSum = 0;
+
 
         function addNewItem() {
             var itemIndex = document.querySelectorAll('.item').length + 1;
@@ -106,7 +141,7 @@
 
             var productSelect = document.createElement('select');
             productSelect.name = 'items[' + itemIndex + '][product_name_code]';
-            productSelect.id = "my-select-id";
+            productSelect.id = "my-select-id-" + itemIndex; // Ensure a unique ID for each select element
             productSelect.classList.add('form-control', 'mb-2');
 
             fetch(items)
@@ -114,12 +149,15 @@
                 .then(data => {
                     data.forEach(product => {
                         var option = document.createElement('option');
-                        option.value = product.name+' - '+product.code+' - '+product.id;
-                        option.text = product.name+' - '+product.code+' - '+product.id;
+                        option.value = product.name + ' - ' + product.code + ' - ' + product.id;
+                        option.text = product.name + ' - ' + product.code + ' - ' + product.id;
                         productSelect.appendChild(option);
                     });
-                 window.jQuery('#my-select-id').select2();
-            });
+
+                    // Initialize Select2 for the specific ID
+                    window.jQuery('#' + productSelect.id).select2();
+                });
+
             itemDiv.appendChild(productSelect);
 
             var itemImeiCode = document.createElement('input');
@@ -131,7 +169,7 @@
             itemDiv.appendChild(itemImeiCode);
 
             var priceInput = document.createElement('input');
-            priceInput.type = 'text';
+            priceInput.type = 'number';
             priceInput.name = 'items[' + itemIndex + '][device_price]';
             priceInput.placeholder = 'ფასი';
             priceInput.classList.add('form-control', 'mb-2');
@@ -148,11 +186,27 @@
             itemDiv.appendChild(discountTypeSelect);
 
             var discountPrice = document.createElement('input');
-            discountPrice.type = 'text';
+            discountPrice.type = 'number';
             discountPrice.name = 'items[' + itemIndex + '][device_discounted_price]';
             discountPrice.placeholder = 'ფასდაკლება';
             discountPrice.classList.add('form-control', 'mb-2');
             itemDiv.appendChild(discountPrice);
+
+            var templateSelect = document.createElement('select');
+            templateSelect.name = 'items[' + itemIndex + '][template_item]';
+            templateSelect.id = "my-select-id";
+            templateSelect.classList.add('form-control', 'mb-2');
+            fetch(templateItems)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(template => {
+                        var option = document.createElement('option');
+                        option.value = template.id
+                        option.text = template.title
+                        templateSelect.appendChild(option);
+                    });
+            });
+            itemDiv.appendChild(templateSelect);
 
             var removeButton = document.createElement('button');
             removeButton.type = 'button';
@@ -164,6 +218,34 @@
             itemDiv.appendChild(removeButton);
 
             document.getElementById('invoice-items').appendChild(itemDiv);
+        }
+
+    </script>
+
+    <script>
+        function calculateTotal() {
+        totalSum = 0;
+
+            document.querySelectorAll('.item').forEach(item => {
+                const priceInput = item.querySelector('input[name^="items["][name$="][device_price]"]');
+                const discountTypeSelect = item.querySelector('select[name^="items["][name$="][discount_type]"]');
+                const discountPriceInput = item.querySelector('input[name^="items["][name$="][device_discounted_price]"]');
+
+                const price = parseFloat(priceInput.value) || 0;
+                const discountType = discountTypeSelect.value;
+                let discount = parseFloat(discountPriceInput.value) || 0;
+
+                if (discountType === 'percentage') {
+                    discount = (discount / 100) * price;
+                }
+
+
+                totalSum += price - discount;
+            });
+
+            // Update the total sum wherever you want to display it
+            $('#price-text').text('ფასი: ' + totalSum.toFixed(2)).css('display', 'block');
+            console.log(totalSum)
         }
     </script>
 @endsection
