@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Middleware\RoleMiddleware;
 use App\Models\Role;
+use App\Models\Branch;
 
 class UserController extends Controller
 {
@@ -39,7 +40,8 @@ class UserController extends Controller
     public function create()
     {
         $get_all_user_roles = Role::orderBy('id', 'asc')->get();
-        return view('users.create', compact('get_all_user_roles'));
+        $get_all_branches = Branch::orderBy('id', 'asc')->get();
+        return view('users.create', compact('get_all_user_roles', 'get_all_branches'));
     }
 
     /**
@@ -82,7 +84,8 @@ class UserController extends Controller
     {
         $get_all_user_roles = Role::orderBy('id', 'asc')->get();
         $edit_user_data = User::where('id', $id)->firstOrFail();
-        return view('users.edit', compact('get_all_user_roles','edit_user_data'));
+        $get_all_branches = Branch::orderBy('id', 'asc')->get();
+        return view('users.edit', compact('get_all_user_roles','edit_user_data', 'get_all_branches'));
     }
 
     /**

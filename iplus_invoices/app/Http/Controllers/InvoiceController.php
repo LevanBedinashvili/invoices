@@ -24,7 +24,14 @@ class InvoiceController extends Controller
 
     public function index()
     {
-        $get_all_invoice_from_database = Invoice::orderBy('id', 'desc')->get();
+        if(Auth::user()->role_id == 1)
+            $get_all_invoice_from_database = Invoice::orderBy('id', 'desc')->get();
+        else if(Auth::user()->role_id == 2) {
+            $get_all_invoice_from_database = Invoice::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->get();
+        }
+        else if (Auth::user()->role_id == 3) {
+            $get_all_invoice_from_database = Invoice::where('branch_id', Auth::user()->branch_id)->orderBy('id', 'desc')->get();
+        }
         return view('invoices.index', compact('get_all_invoice_from_database'));
     }
 
@@ -90,21 +97,13 @@ class InvoiceController extends Controller
                 $discount_type = 0;
             }
 
-            $name_code = $item['product_name_code'];
-
-            $product_parts = explode(' - ', $name_code);
-            $product_name = $product_parts[0];
-            $product_code = $product_parts[1];
-            $product_id = $product_parts[2];
-
-
             $invoiceItemData = [
-                'device_name' => $product_name,
+                'device_name' =>  $item['device_name'],
                 'device_code' => $item['device_code'],
-                'device_artikuli_code' => $product_code,
+                'device_artikuli_code' =>  $item['device_artikuli_code'],
                 'device_price' => $item['device_price'],
                 'is_deghege' => $is_deghege_checked,
-                'product_id' => $product_id,
+                'product_id' => null,
                 'discount_type' => $discount_type,
                 'device_discounted_price' => $item['device_discounted_price'],
                 'device_total_price' => $deviceTotalPrice,
@@ -122,7 +121,7 @@ class InvoiceController extends Controller
             $sagarantio->personal_number = $requestData['personal_number'];
             $sagarantio->branch_id = $branch_id;
             $sagarantio->device_imei_code = $item['device_code'];
-            $sagarantio->device_name = $product_name;
+            $sagarantio->device_name = $item['device_name'];
             $sagarantio->invoice_id = $invoice->id;
             $sagarantio->save();
 
@@ -180,10 +179,10 @@ class InvoiceController extends Controller
             'mobile_number' => 'required|string|max:255',
             'date_of_birth' => 'nullable|date',
             'branch_id' => 'required',
+            'payment_type_id' => 'required',
             'comment' => 'sometimes',
             'items' => 'required|array',
             'items.*.device_price' => 'required|numeric|min:0',
-            'items.*.product_name_code' => 'required|string|min:0',
         ]);
 
         $invoice->update([
@@ -192,6 +191,7 @@ class InvoiceController extends Controller
             'personal_number' => $request->input('personal_number'),
             'mobile_number' => $request->input('mobile_number'),
             'date_of_birth' => $request->input('date_of_birth'),
+            'payment_type_id' => $request->input('payment_type_id'),
             'branch_id' => $request->input('branch_id'),
             'comment' => $request->input('comment'),
         ]);
@@ -229,23 +229,15 @@ class InvoiceController extends Controller
                 $device_total_price;
             }
 
-
-            $name_code = $itemData['product_name_code'];
-
-            $product_parts = explode(' - ', $name_code);
-            $product_name = $product_parts[0];
-            $product_code = $product_parts[1];
-            $product_id = $product_parts[2];
-
             if (isset($itemData['id']) && in_array($itemData['id'], $existingItemIds)) {
 
                 $item = InvoiceItem::find($itemData['id']);
                 $item->update([
-                    'device_name' => $product_name,
+                    'device_name' => $itemData['device_name'],
                     'device_code' => $itemData['device_code'],
                     'device_price' => $itemData['device_price'],
-                    'device_artikuli_code' => $product_code,
-                    'product_id' => $product_id,
+                    'device_artikuli_code' => $itemData['device_artikuli_code'],
+                    'product_id' => null,
                     'device_discounted_price' => $itemData['device_discounted_price'],
                     'is_deghege' => $is_deghege_checked,
                     'discount_type' => $discount_type,
@@ -254,11 +246,11 @@ class InvoiceController extends Controller
                 $updatedItemIds[] = $itemData['id'];
             } else {
                 $newItem = new InvoiceItem([
-                    'device_name' => $product_name,
+                    'device_name' => $itemData['device_name'],
                     'device_code' => $itemData['device_code'],
                     'device_price' => $itemData['device_price'],
-                    'device_artikuli_code' => $product_code,
-                    'product_id' => $product_id,
+                    'device_artikuli_code' => $itemData['device_artikuli_code'],
+                    'product_id' => null,
                     'device_discounted_price' => $itemData['device_discounted_price'],
                     'is_deghege' => $is_deghege_checked,
                     'discount_type' => $discount_type,

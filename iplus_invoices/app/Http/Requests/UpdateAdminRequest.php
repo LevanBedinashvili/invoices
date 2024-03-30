@@ -28,6 +28,7 @@ class UpdateAdminRequest extends FormRequest
             'email' => ['required'],
             'password' => ['sometimes'],
             'role_id' => ['required'],
+            'branch_id' => ['required'],
         ];
     }
 }

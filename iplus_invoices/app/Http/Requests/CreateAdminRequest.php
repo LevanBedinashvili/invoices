@@ -28,6 +28,7 @@ class CreateAdminRequest extends FormRequest
             'email' => ['required'],
             'password' => ['required'],
             'role_id' => ['required'],
+            'branch_id' => ['required'],
         ];
     }
 }

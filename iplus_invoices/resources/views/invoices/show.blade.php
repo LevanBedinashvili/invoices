@@ -37,7 +37,7 @@
                                     <div class="text-muted text-sm-end">
                                         @if($invoice->comment != null)
                                         <div class="mt-4">
-                                            <h5 class="font-size-15 mb-1">კონსულტანტი:</h5>
+                                            <h5 class="font-size-15 mb-1">კომენტარი:</h5>
                                             <p>{{ $invoice->comment }}</p>
                                         </div>
                                         @endif
@@ -62,34 +62,34 @@
                                     <table class="table align-middle table-centered mb-0">
                                         <thead>
                                             <tr>
-                                                <th class="fw-bold" style="width: 70px;">No.</th>
                                                 <th class="fw-bold">მოწყობილობა</th>
-                                                <th class="fw-bold">IMEI კოდი / არტიკული კოდი</th>
-                                                <th class="fw-bold">ფასი | საბოლოო ფასი</th>
+                                                <th class="fw-bold">IMEI კოდი </th>
+                                                <th class="fw-bold">არტიკული კოდი</th>
+                                                <th class="fw-bold">ფასი | საბოლოო ფასი </th>
                                                 <th class="text-end fw-bold" style="width: 120px;">ფასდაკლება ₾/%</th>
                                             </tr>
                                         </thead><!-- end thead -->
                                         <tbody>
                                         @foreach ($invoice->items as $item)
                                             <tr>
-                                            <th scope="row">{{ $loop->iteration }}</th>
                                             <td>
                                                 <div>
-                                                    <p class="text-muted mb-0" style="word-wrap: break-word;">
+                                                    <p class="text-muted mb-0" style="word-wrap: break-word; font-size: 10px;">
                                                         {{ $item->device_name }}
                                                     </p>
                                                 </div>
                                             </td>
-                                            <td>{{ $item->device_code }} / {{ $item->device_artikuli_code }}</td>
-                                            <td>{{ $item->device_price }} | {{ $item->device_total_price}}</td>
+                                            <td style="font-size: 10px;">{{ $item->device_code }}</td>
+                                            <td style="font-size: 10px;">{{ $item->device_artikuli_code }}</td>
+                                            <td style="font-size: 10px;">{{ $item->device_price }} | {{ $item->device_total_price}} </td>
 
-                                            <td class="text-end">{{ $item->device_discounted_price }} @if($item->discount_type == 1) ლარი @elseif($item->discount_type == 2) პროცენტი @else არ აქვს @endif</td>
+                                            <td class="text-end" style="font-size: 12px;">{{ $item->device_discounted_price }} @if($item->discount_type == 1) ლარი @elseif($item->discount_type == 2) პროცენტი @else არ აქვს @endif</td>
                                         </tr>
                                         @endforeach
                                         <!-- end tr -->
                                         <tr>
                                             <th scope="row" colspan="4" class="border-0 text-end fw-bold">
-                                                ფასი ჯამში:</th>
+                                                ფასი (₾):</th>
                                             <td class="border-0 text-end">{{ $invoice->items->sum('device_total_price') }}</td>
                                         </tr>
                                         <tr>
@@ -97,13 +97,28 @@
                                                 გადახდის ტიპი:</th>
                                             <td class="border-0 text-end">{{ $invoice->payment_type->title }}</td>
                                         </tr>
-                                        <!-- end tr -->
-                                        <!-- end tr -->
-                                        </tbody><!-- end tbody -->
-                                    </table><!-- end table -->
-                                </div><!-- end table responsive -->
+                                        <tr>
+                                            @if($invoice->items[0]->is_deghege == 1)
+                                            <th scope="row" colspan="4" class="border-0 text-end fw-bold">
+                                                დღგ:
+                                            </th>
+                                            <td class="border-0 text-end">გარეშე</td>
+                                            @else
+                                            <th scope="row" colspan="4" class="border-0 text-end fw-bold">
+                                                დღგ:
+                                            </th>
+                                            <td class="border-0 text-end">ჩათვლით</td>
+                                            @endif
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div>
-                                    <p>ხელმოწერა: ___________________</p>
+                                    <p>მომხმარებლის ხელმოწერა: ___________________</p>
+                                </div>
+                                <br>
+                                <div>
+                                    <p>'აიპლიუსის' წარმომადგენელი: ___________________</p>
                                 </div>
                                 <div class="d-print-none mt-4">
                                     <div class="float-end">

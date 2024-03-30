@@ -46,7 +46,7 @@
                                         </div>
                                         <div class="mb-3 col-md-6">
                                             <label class="form-label">მომხმარებლის პირადი ნომერი</label>
-                                            <input type="number" class="form-control" name="personal_number" placeholder="შეიყვანეთ მომხმარებლის პირადი ნომერი">
+                                            <input type="text" class="form-control" name="personal_number" placeholder="შეიყვანეთ მომხმარებლის პირადი ნომერი">
                                         </div>
                                         <div class="mb-3 col-md-6">
                                             <label class="form-label">მომხმარებლის მობილურის ნომერი</label>
@@ -138,26 +138,24 @@
             label.appendChild(is_deghege);
             itemDiv.appendChild(label);
 
-            var productSelect = document.createElement('select');
-            productSelect.name = 'items[' + itemIndex + '][product_name_code]';
-            productSelect.id = "my-select-id-" + itemIndex; // Ensure a unique ID for each select element
-            productSelect.classList.add('form-control', 'mb-2');
 
-            fetch(items)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(product => {
-                        var option = document.createElement('option');
-                        option.value = product.name + ' - ' + product.code + ' - ' + product.id;
-                        option.text = product.name + ' - ' + product.code + ' - ' + product.id;
-                        productSelect.appendChild(option);
-                    });
+            var itemTitle = document.createElement('input');
+            itemTitle.type = 'text';
+            itemTitle.name = 'items[' + itemIndex + '][device_name]';
+            itemTitle.placeholder = 'ნივთის დასახელება';
+            itemTitle.classList.add('form-control', 'mb-2');
+            itemTitle.style.marginTop = '10px';
+            itemDiv.appendChild(itemTitle);
 
-                    // Initialize Select2 for the specific ID
-                    window.jQuery('#' + productSelect.id).select2();
-                });
 
-            itemDiv.appendChild(productSelect);
+            var itemArtikuliCode = document.createElement('input');
+            itemArtikuliCode.type = 'text';
+            itemArtikuliCode.name = 'items[' + itemIndex + '][device_artikuli_code]';
+            itemArtikuliCode.placeholder = 'ნივთის არტიკული კოდი';
+            itemArtikuliCode.classList.add('form-control', 'mb-2');
+            itemArtikuliCode.style.marginTop = '10px';
+            itemDiv.appendChild(itemArtikuliCode);
+
 
             var itemImeiCode = document.createElement('input');
             itemImeiCode.type = 'text';
@@ -168,7 +166,7 @@
             itemDiv.appendChild(itemImeiCode);
 
             var priceInput = document.createElement('input');
-            priceInput.type = 'number';
+            priceInput.type = 'text';
             priceInput.name = 'items[' + itemIndex + '][device_price]';
             priceInput.placeholder = 'ფასი';
             priceInput.classList.add('form-control', 'mb-2');
@@ -185,7 +183,7 @@
             itemDiv.appendChild(discountTypeSelect);
 
             var discountPrice = document.createElement('input');
-            discountPrice.type = 'number';
+            discountPrice.type = 'text';
             discountPrice.name = 'items[' + itemIndex + '][device_discounted_price]';
             discountPrice.placeholder = 'ფასდაკლება';
             discountPrice.classList.add('form-control', 'mb-2');
@@ -222,34 +220,33 @@
     </script>
 
     <script>
-        function calculateTotal() {
-        totalSum = 0;
+    function calculateTotal() {
+        let totalSum = 0;
 
-            document.querySelectorAll('.item').forEach(item => {
-                const priceInput = item.querySelector('input[name^="items["][name$="][device_price]"]');
-                const discountTypeSelect = item.querySelector('select[name^="items["][name$="][discount_type]"]');
-                const discountPriceInput = item.querySelector('input[name^="items["][name$="][device_discounted_price]"]');
-                let is_deghege = item.querySelector('input[name^="items["][name$="][is_deghege]"]');
+        document.querySelectorAll('.item').forEach(item => {
+            const priceInput = item.querySelector('input[name^="items["][name$="][device_price]"]');
+            const discountTypeSelect = item.querySelector('select[name^="items["][name$="][discount_type]"]');
+            const discountPriceInput = item.querySelector('input[name^="items["][name$="][device_discounted_price]"]');
+            const is_deghege = item.querySelector('input[name^="items["][name$="][is_deghege]"]');
 
-                const price = parseFloat(priceInput.value) || 0;
-                const discountType = discountTypeSelect.value;
-                let discount = parseFloat(discountPriceInput.value) || 0;
+            let price = parseFloat(priceInput.value) || 0;
+            const discountType = discountTypeSelect.value;
+            let discount = parseFloat(discountPriceInput.value) || 0;
 
-                if(is_deghege.checked){
-                    price = parseFloat(price /= 1.18) || 0;
-                }
+            if (is_deghege.checked) {
+                price = price / 1.18;
+            }
 
-                if (discountType === 'percentage') {
-                    discount = (discount / 100) * price;
-                }
+            if (discountType === 'percentage') {
+                discount = (discount / 100) * price;
+            }
 
+            totalSum += price - discount;
+        });
 
-                totalSum += price - discount;
-            });
-
-            // Update the total sum wherever you want to display it
-            $('#price-text').text('ფასი: ' + totalSum.toFixed(2)).css('display', 'block');
-            console.log(totalSum)
-        }
-    </script>
+        // Update the total sum wherever you want to display it
+        $('#price-text').text('ფასი: ' + totalSum.toFixed(2)).css('display', 'block');
+        console.log(totalSum);
+    }
+</script>
 @endsection

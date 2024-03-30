@@ -38,6 +38,7 @@
                                         <th>სახელი</th>
                                         <th>ელ.ფოსტა</th>
                                         <th>ადმინ როლი</th>
+                                        <th>ფილიალი</th>
                                         <th>რედაქტირება</th>
 {{--                                        <th>წაშლა</th>--}}
                                     </tr>
@@ -49,6 +50,7 @@
                                         <td>{{ $user_item->name }}</td>
                                         <td>{{ $user_item->email }}</td>
                                         <td>{{ $user_item->role->role_name }}</td>
+                                        <td>{{ $user_item->branch->branch_name }}</td>
                                         <td>
                                             <div class="d-flex">
                                                 <a href="{{ route('users.edit', $user_item->id) }}"

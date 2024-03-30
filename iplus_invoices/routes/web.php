@@ -51,6 +51,26 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/invoice/createIfExists/{id}', [InvoiceController::class, 'createIfExists'])->name('invoice.createIfExists');
 
+    // Route::get('/clear-all-cache', function() {
+    //     Artisan::call('optimize:clear');
+    //     return 'Application all kind of cache has been cleared';
+    // });
+    // Route::get('/clear-cache', function() {
+    //     Artisan::call('cache:clear');
+    //     return 'Application cache has been cleared';
+    // });
+    // Route::get('/route-cache', function() {
+    //     Artisan::call('route:cache');
+    //     return 'Routes cache has been cleared';
+    // });
+    // Route::get('/config-cache', function() {
+    //      Artisan::call('config:cache');
+    //      return 'Config cache has been cleared';
+    // });
+    // Route::get('/view-clear', function() {
+    //     Artisan::call('view:clear');
+    //     return 'View cache has been cleared';
+    // });
 
     Route::get('/loginout',[LogoutController::class, 'logout'])->name('user.logout');
 });

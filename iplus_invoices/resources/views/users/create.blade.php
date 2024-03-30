@@ -56,6 +56,17 @@
                                             @endforelse
                                         </select>
                                     </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">ფილიალი</label>
+                                        <select id="inputState" name="branch_id" class="default-select form-control wide">
+                                            @forelse ($get_all_branches as $branch_item)
+                                            <option value="{{ $branch_item->id }}">{{ $branch_item->branch_name }}</option>
+                                            @empty
+                                            <option disabled>ფილიალები არ მოიძებნა</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
+
                                 </div>
                                 <button type="submit" class="btn btn-info">ადმინისტრატორის დამატება</button>
                             </form>

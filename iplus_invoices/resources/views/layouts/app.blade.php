@@ -185,6 +185,8 @@
                         </a>
                     </li>
 
+                    @if(Auth::user()->role_id == 1)
+
 
                     <li>
                         <a href="{{ route('branch.index') }}">
@@ -194,12 +196,12 @@
                     </li>
 
 
-                    <li>
+                    {{-- <li>
                         <a href="{{ route('product.index') }}">
                             <i class="bx bx-file icon nav-icon"></i>
                             <span class="menu-item" data-key="t-horizontal">პროდუქტები</span>
                         </a>
-                    </li>
+                    </li> --}}
 
 
                     <li>
@@ -228,6 +230,8 @@
                             <li><a href="{{ route('users.create') }}" data-key="t-user-list">ადმინის დამატება</a></li>
                         </ul>
                     </li>
+
+                    @endif
 
                     <li>
                         <a href="javascript: void(0);" class="has-arrow">
@@ -281,7 +285,7 @@
     <div data-simplebar class="h-100">
         <div class="rightbar-title d-flex align-items-center bg-dark p-3">
 
-            <h5 class="m-0 me-2 text-white">Theme Customizer</h5>
+            <h5 class="m-0 me-2 text-white"></h5>
 
             <a href="javascript:void(0);" class="right-bar-toggle-close ms-auto">
                 <i class="mdi mdi-close noti-icon"></i>

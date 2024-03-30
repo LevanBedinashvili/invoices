@@ -45,11 +45,11 @@
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label class="form-label">მომხმარებლის პირადი ნომერი</label>
-                                        <input type="number" class="form-control" name="personal_number" value="{{ $edit_warranty_data->personal_number }}" placeholder="შეიყვანეთ მომხმარებლის პირადი ნომერი">
-                                    </div>
+                                        <input type="text" class="form-control" name="personal_number" value="{{ $edit_warranty_data->personal_number }}" placeholder="შეიყვანეთ მომხმარებლის პირადი ნომერი">
+                                         </div>
                                     <div class="mb-3 col-md-6">
                                         <label class="form-label">პროდუქტის IMEI კოდი</label>
-                                        <input type="number" class="form-control" name="device_imei_code" value="{{ $edit_warranty_data->device_imei_code }}" placeholder="შეიყვანეთ პროდუქტის IMEI კოდი">
+                                        <input type="text" class="form-control" name="device_imei_code" value="{{ $edit_warranty_data->device_imei_code }}" placeholder="შეიყვანეთ პროდუქტის IMEI კოდი">
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label class="form-label">პროდუქტის დასახელება</label>

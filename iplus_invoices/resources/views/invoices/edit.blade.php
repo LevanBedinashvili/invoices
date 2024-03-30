@@ -97,22 +97,16 @@
                                             <div class="item">
                                                 <input type="checkbox" class="form-check-input" name="items[{{ $loop->index }}][is_deghege]" {{ $item->is_deghege ? 'checked' : '' }}>
                                                 <label class="form-check-label">დიპლომატიური</label>
-                                                <select id="my-select-id2" class="default-select form-control wide myselectclass" name="items[{{ $loop->index }}][product_name_code]">
-                                                    <option value="{{ $item->product->name }} - {{ $item->product->code }} - {{ $item->product->id }}" selected>{{ $item->product->name }} - {{ $item->product->code }} - {{ $item->product->id }}</option>
-                                                    @forelse ($get_products as $product_item)
-                                                    <option value="{{ $product_item->name }} - {{ $product_item->code }} - {{ $product_item->id }}">{{ $product_item->name }} - {{ $product_item->code }} - {{ $product_item->id }}</option>
-                                                    @empty
-                                                    <option disabled>პროდუქტები არ მოიძებნა</option>
-                                                    @endforelse
-                                                </select>
-                                                <input style="margin-top: 10px;" type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_code]" value="{{ $item->device_code }}" placeholder="მოწყობილობის IMEI კოდი">
-                                                <input type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_price]" value="{{ $item->device_price }}" placeholder="მოწყობილობის ფასი">
+                                                <input style="margin-top: 10px;" type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_name]" value="{{ $item->device_name }}" placeholder="მოწყობილობის დასახელება">
+                                                <input style="margin-top: 10px;" type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_artikuli_code]" value="{{ $item->device_artikuli_code }}" placeholder="მოწყობილობის არტიკული კოდი">
+                                                <input style="margin-top: 10px;" type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_code]" value="{{ $item->device_code }}" placeholder="მოწყობილობის IMEI კოდი">
+                                                <input type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_price]" value="{{ $item->device_price }}" placeholder="მოწყობილობის ფასი">
                                                 <select class="form-control mb-2" name="items[{{ $loop->index }}][discount_type]">
                                                     <option value="none">No Discount</option>
                                                     <option value="fixed" {{ $item->discount_type === 1 ? 'selected' : '' }}>ფიქსირებული თანხა</option>
                                                     <option value="percentage" {{ $item->discount_type === 2 ? 'selected' : '' }}>პროცენტი</option>
                                                 </select>
-                                                <input type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_discounted_price]" value="{{ $item->device_discounted_price }}" placeholder="ფასდაკლებული ფასი">
+                                                <input type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_discounted_price]" value="{{ $item->device_discounted_price }}" placeholder="ფასდაკლებული ფასი">
                                                 <button type="button" class="btn btn-danger mb-2" onclick="removeItem(this)">წაშლა</button>
                                             </div>
                                         @endforeach
@@ -163,26 +157,22 @@
             label.appendChild(is_deghege);
             itemDiv.appendChild(label);
 
-            var productSelect = document.createElement('select');
-            productSelect.name = 'items[' + itemIndex + '][product_name_code]';
-            productSelect.id = "my-select-id-" + itemIndex; // Ensure a unique ID for each select element
-            productSelect.classList.add('form-control', 'mb-2');
+            var itemTitle = document.createElement('input');
+            itemTitle.type = 'text';
+            itemTitle.name = 'items[' + itemIndex + '][device_name]';
+            itemTitle.placeholder = 'ნივთის დასახელება';
+            itemTitle.classList.add('form-control', 'mb-2');
+            itemTitle.style.marginTop = '10px';
+            itemDiv.appendChild(itemTitle);
 
-            fetch(items)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(product => {
-                        var option = document.createElement('option');
-                        option.value = product.name + ' - ' + product.code + ' - ' + product.id;
-                        option.text = product.name + ' - ' + product.code + ' - ' + product.id;
-                        productSelect.appendChild(option);
-                    });
 
-                    // Initialize Select2 for the specific ID
-                    window.jQuery('#' + productSelect.id).select2();
-                });
-
-            itemDiv.appendChild(productSelect);
+            var itemArtikuliCode = document.createElement('input');
+            itemArtikuliCode.type = 'text';
+            itemArtikuliCode.name = 'items[' + itemIndex + '][device_artikuli_code]';
+            itemArtikuliCode.placeholder = 'ნივთის არტიკული კოდი';
+            itemArtikuliCode.classList.add('form-control', 'mb-2');
+            itemArtikuliCode.style.marginTop = '10px';
+            itemDiv.appendChild(itemArtikuliCode);
 
             var itemImeiCode = document.createElement('input');
             itemImeiCode.type = 'text';
@@ -235,28 +225,32 @@
 
 <script>
     function calculateTotal() {
-    totalSum = 0;
+        let totalSum = 0;
 
         document.querySelectorAll('.item').forEach(item => {
             const priceInput = item.querySelector('input[name^="items["][name$="][device_price]"]');
             const discountTypeSelect = item.querySelector('select[name^="items["][name$="][discount_type]"]');
             const discountPriceInput = item.querySelector('input[name^="items["][name$="][device_discounted_price]"]');
+            const is_deghege = item.querySelector('input[name^="items["][name$="][is_deghege]"]');
 
-            const price = parseFloat(priceInput.value) || 0;
+            let price = parseFloat(priceInput.value) || 0;
             const discountType = discountTypeSelect.value;
             let discount = parseFloat(discountPriceInput.value) || 0;
+
+            if (is_deghege.checked) {
+                price = price / 1.18;
+            }
 
             if (discountType === 'percentage') {
                 discount = (discount / 100) * price;
             }
-
 
             totalSum += price - discount;
         });
 
         // Update the total sum wherever you want to display it
         $('#price-text').text('ფასი: ' + totalSum.toFixed(2)).css('display', 'block');
-        console.log(totalSum)
+        console.log(totalSum);
     }
 </script>
 @endsection
