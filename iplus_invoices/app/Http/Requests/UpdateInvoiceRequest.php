@@ -26,7 +26,7 @@ class UpdateInvoiceRequest extends FormRequest
         return [
             'first_name' => 'required',
             'last_name' => 'required',
-            'personal_number' => 'required',
+            'personal_number' => 'sometimes',
             'mobile_number' => 'sometimes',
             'date_of_birth' => 'sometimes',
             'payment_type_id' => 'required',

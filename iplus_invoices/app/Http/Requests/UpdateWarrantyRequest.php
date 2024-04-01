@@ -26,7 +26,7 @@ class UpdateWarrantyRequest extends FormRequest
         return [
             'first_name' => ['required'],
             'last_name' => ['required'],
-            'personal_number' => ['required'],
+            'personal_number' => ['sometimes'],
             'device_imei_code' => ['sometimes'],
             'device_name' => ['sometimes'],
             'branch_id' => ['required'],
