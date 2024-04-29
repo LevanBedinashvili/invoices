@@ -2,6 +2,44 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
+
+            @if(Auth::user()->role_id == 1)
+            <div class="row">
+                <div class="col-xl-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">ინვოისის მოძებნა</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="basic-form">
+                                <form action="{{ route('filter.invoice_search') }}" method="get">
+                                    <div class="row">
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">ინვოისის ნომერი</label>
+                                            <input type="text" class="form-control" name="id" placeholder="ინვოისის ნომერი">
+                                        </div>
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">მომხმარებლის პირადი ნომერი</label>
+                                            <input type="text" class="form-control" name="personal_number" placeholder="მომხმარებლის პირადი ნომერი">
+                                        </div>
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">მომხმარებლის სახელი</label>
+                                            <input type="text" class="form-control" name="first_name" placeholder="მომხმარებლის სახელი">
+                                        </div>
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">მომხმარებლის გვარი</label>
+                                            <input type="text" class="form-control" name="last_name" placeholder="მომხმარებლის გვარი">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-info">ინვოისის მოძებნა</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -31,7 +69,7 @@
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="example" class="display table" style="min-width: 845px">
+                                <table id="examplex" class="display table" style="min-width: 845px">
                                     <thead>
                                     <tr>
                                         <th>#</th>
@@ -43,7 +81,6 @@
                                         <th>ახალი</th>
                                         <th>ინვოისი</th>
                                         <th>რედაქტირება</th>
-                                        <th style="display: none;">ტესტინგ</th>
 {{--                                        <th>წაშლა</th>--}}
                                     </tr>
                                     </thead>
@@ -77,14 +114,6 @@
 {{--                                                            class="fa fa-trash"></i>წაშლა</button>--}}
 {{--                                                </form>--}}
 {{--                                            </td>--}}
-                                            <td style="display: none;">
-                                                @foreach ($invoice->items as $item)
-                                                <p>
-                                                    {{ $item->device_code }}
-                                                </p>
-                                                @endforeach
-                                            </td>
-
                                         </tr>
                                     @empty
                                         <div class="alert alert-danger">
@@ -92,8 +121,10 @@
                                         </div>
                                     @endforelse
                                     </tbody>
+
                                 </table>
                             </div>
+                            {{ $get_all_invoice_from_database->links() }}
 
                         </div>
                     </div>
@@ -110,7 +141,7 @@
 <script>
     function html_table_to_excel(type)
         {
-            var data = document.getElementById('example');
+            var data = document.getElementById('examplex');
 
             var file = XLSX.utils.table_to_book(data, {sheet: "sheet1"});
 

@@ -1,5 +1,52 @@
 @extends('layouts.app')
 @section('content')
+
+<div class="page-content">
+    <div class="container-fluid">
+
+        @if(Auth::user()->role_id == 1)
+        <div class="row">
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">საგარანტიოს მოძებნა</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="basic-form">
+                            <form action="{{ route('filter.warranty_search') }}" method="get">
+                                <div class="row">
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">პროდუქტის იმეი კოდი</label>
+                                        <input type="text" class="form-control" name="device_imei_code" placeholder="ინვოისის ნომერი">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">მომხმარებლის პირადი ნომერი</label>
+                                        <input type="text" class="form-control" name="personal_number" placeholder="მომხმარებლის პირადი ნომერი">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">მომხმარებლის სახელი</label>
+                                        <input type="text" class="form-control" name="first_name" placeholder="მომხმარებლის სახელი">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">მომხმარებლის გვარი</label>
+                                        <input type="text" class="form-control" name="last_name" placeholder="მომხმარებლის გვარი">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info">მოძებნა</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+
+    </div>
+    <!-- container-fluid -->
+</div>
+
+
     <div class="page-content">
         <div class="container-fluid">
 
@@ -31,7 +78,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="example" class="display table" style="min-width: 845px">
+                                <table id="examplec" class="display table" style="min-width: 845px">
                                     <thead>
                                     <tr>
                                         <th>#</th>
@@ -82,6 +129,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                            {{ $get_all_warranty_from_database->links() }}
 
                         </div>
                     </div>
@@ -92,11 +140,12 @@
         </div>
         <!-- container-fluid -->
     </div>
+
     <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
     <script>
     function html_table_to_excel(type)
         {
-            var data = document.getElementById('example');
+            var data = document.getElementById('examplec');
 
             var file = XLSX.utils.table_to_book(data, {sheet: "sheet1"});
 

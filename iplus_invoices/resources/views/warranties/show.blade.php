@@ -1,9 +1,7 @@
 @extends('layouts.app')
 @section('content')
-
     <div class="page-content">
         <div class="container-fluid">
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -25,7 +23,6 @@
                                 <div style="font-size: 9px;">
                                     {!! $get_warranty->template->description !!}
                                 </div>
-
                                 <p>ხელმოწერა: ___________________</p>
                             </div>
                             <div class="d-print-none mt-4">
@@ -37,9 +34,6 @@
                     </div>
                 </div><!-- end col -->
             </div><!-- end row -->
-
-
-
         </div>
         <!-- container-fluid -->
     </div>

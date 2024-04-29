@@ -78,55 +78,6 @@
             </div>
 
             <div class="d-flex">
-
-                <div class="dropdown d-inline-block">
-                    <button type="button" class="btn header-item noti-icon" id="page-header-notifications-dropdown-v"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="bx bx-bell icon-sm align-middle"></i>
-                        @if($adminNotifications->count() > 0)
-                        <span class="noti-dot bg-danger rounded-pill">{{ $adminNotifications->count() }}</span>
-                        @endif
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0"
-                         aria-labelledby="page-header-notifications-dropdown-v">
-                        <div class="p-3">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h5 class="m-0 font-size-15"> ნოთიფიკაციები </h5>
-                                </div>
-                                <div class="col-auto">
-                                    <a href="{{ route('notification.mark_as_seen') }}" class="small fw-semibold text-decoration-underline"> წაკითხულად მონიშვნა</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div data-simplebar style="max-height: 250px;">
-                            @forelse($adminNotifications as $notification_item)
-                                <a href="#!" class="text-reset notification-item">
-                                    <div class="d-flex">
-                                        <div class="flex-grow-1">
-                                            <p class="text-muted font-size-13 mb-0 float-end">{{ $notification_item->created_at }}</p>
-                                            <h6 class="mb-1">{{ $notification_item->user->name }}</h6>
-                                            <div>
-                                                <p class="mb-0">{{ $notification_item->message }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            @empty
-                                <a href="#!" class="text-reset notification-item">
-                                    <div class="d-flex">
-                                        <div class="flex-grow-1">
-                                            <div class="alert alert-danger">
-                                                ნოთიფიკაციები არ მოიძებნა
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            @endforelse
-                        </div>
-                    </div>
-                </div>
-
                 <div class="dropdown d-inline-block">
                     <button type="button" class="btn header-item user text-start d-flex align-items-center" id="page-header-user-dropdown-v"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

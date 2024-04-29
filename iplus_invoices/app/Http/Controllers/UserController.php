@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $get_all_users_from_database = User::orderBy('id', 'asc')->get();
+        $get_all_users_from_database = User::with(['branch', 'role'])->orderBy('id', 'asc')->get();
         return view('users.index', compact('get_all_users_from_database'));
     }
 

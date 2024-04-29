@@ -20,18 +20,26 @@ class WarrantyController extends Controller
      * @return Response
      */
 
-    public function index()
-    {
-        if(Auth::user()->role_id == 1)
-            $get_all_warranty_from_database = Warranty::orderBy('id', 'desc')->get();
-        else if(Auth::user()->role_id == 2) {
-            $get_all_warranty_from_database = Warranty::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->get();
-        }
-        else if (Auth::user()->role_id == 3) {
-            $get_all_warranty_from_database = Warranty::where('branch_id', Auth::user()->branch_id)->orderBy('id', 'desc')->get();
-        }
-        return view('warranties.index', compact('get_all_warranty_from_database'));
-    }
+     public function index()
+     {
+         if (Auth::user()->role_id == 1) {
+             $get_all_warranty_from_database = Warranty::with(['user', 'branch'])
+                                                       ->orderBy('id', 'desc')
+                                                       ->paginate(50);
+         } else if (Auth::user()->role_id == 2) {
+             $get_all_warranty_from_database = Warranty::with(['user', 'branch'])
+                                                       ->where('user_id', Auth::user()->id)
+                                                       ->orderBy('id', 'desc')
+                                                       ->paginate(50);
+         } else if (Auth::user()->role_id == 3) {
+             $get_all_warranty_from_database = Warranty::with(['user', 'branch'])
+                                                       ->where('branch_id', Auth::user()->branch_id)
+                                                       ->orderBy('id', 'desc')
+                                                       ->paginate(50);
+         }
+
+         return view('warranties.index', compact('get_all_warranty_from_database'));
+     }
 
     /**
      * Show the form for creating a new resource.
@@ -78,7 +86,7 @@ class WarrantyController extends Controller
      */
     public function show($id)
     {
-        $get_warranty = Warranty::findOrFail($id);
+        $get_warranty = Warranty::where('id', $id)->firstOrFail();
         return view('warranties.show', compact('get_warranty'));
     }
 

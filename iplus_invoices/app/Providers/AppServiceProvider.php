@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Notification;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,12 +25,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer('*', function ($view){
-            $adminNotifications = Notification::where('is_seen', '0')
-                ->orderBy('id', 'desc')
-                ->get();
-            return $view->with(compact('adminNotifications'));
-
-        });
+        Paginator::useBootstrap();
     }
 }

@@ -22,18 +22,29 @@ class InvoiceController extends Controller
      * @return Response
      */
 
-    public function index()
-    {
-        if(Auth::user()->role_id == 1)
-            $get_all_invoice_from_database = Invoice::orderBy('id', 'desc')->get();
-        else if(Auth::user()->role_id == 2) {
-            $get_all_invoice_from_database = Invoice::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->get();
-        }
-        else if (Auth::user()->role_id == 3) {
-            $get_all_invoice_from_database = Invoice::where('branch_id', Auth::user()->branch_id)->orderBy('id', 'desc')->get();
-        }
-        return view('invoices.index', compact('get_all_invoice_from_database'));
-    }
+     public function index()
+     {
+         $user = Auth::user();
+
+         $query = Invoice::with(['user', 'payment_type'])->orderBy('id', 'desc');
+
+         switch ($user->role_id) {
+             case 1:
+                 break;
+             case 2:
+                 $query = $query->where('user_id', $user->id);
+                 break;
+             case 3:
+                 $query = $query->where('branch_id', $user->branch_id);
+                 break;
+             default:
+                 return view('invoices.index', ['get_all_invoice_from_database' => collect()]);
+         }
+
+         $get_all_invoice_from_database = $query->paginate(20);
+
+         return view('invoices.index', compact('get_all_invoice_from_database'));
+     }
 
     /**
      * Show the form for creating a new resource.
