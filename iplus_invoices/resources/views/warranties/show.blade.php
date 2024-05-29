@@ -7,7 +7,14 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-12" style="text-align: end;">
+                                <div class="col-sm-6" >
+                                    <div class="text-muted" >
+                                        <h6 class="">საგარანტიოს ინფორმაცია:</h6>
+                                        <p style="font-size: 12px;" class="mb-1">გარანტიის ვადა: {{ $get_warranty->template->warranty_lenght}}</p>
+                                        <p style="font-size: 12px;" class="mb-1">თარიღი: {{ $get_warranty->created_at }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" style="text-align: end;">
                                     <div class="text-muted" >
                                         <h6 class="">მომხმარებლის ინფორმაცია:</h6>
                                         <p style="font-size: 12px;" class="mb-1">სახელი, გვარი: {{ $get_warranty->first_name }} {{ $get_warranty->last_name }}</p>
@@ -19,7 +26,7 @@
                                 <!-- end col -->
                             </div>
                             <!-- end row -->
-                            <div style="margin-bottom: 50px;">
+                            <div style="margin-top: 50px;">
                                 <div style="font-size: 9px;">
                                     {!! $get_warranty->template->description !!}
                                 </div>

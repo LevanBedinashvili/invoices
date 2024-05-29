@@ -100,7 +100,8 @@
                                                 <input style="margin-top: 10px;" type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_name]" value="{{ $item->device_name }}" placeholder="მოწყობილობის დასახელება">
                                                 <input style="margin-top: 10px;" type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_artikuli_code]" value="{{ $item->device_artikuli_code }}" placeholder="მოწყობილობის არტიკული კოდი">
                                                 <input style="margin-top: 10px;" type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_code]" value="{{ $item->device_code }}" placeholder="მოწყობილობის IMEI კოდი">
-                                                <input type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_price]" value="{{ $item->device_price }}" placeholder="მოწყობილობის ფასი">
+                                                <input type="text" class="form-control mb-2" name="items[{{ $loop->index }}][device_price]" value="{{ $item->device_price }}" placeholder="ფასი">
+                                                <input type="number" class="form-control mb-2" name="items[{{ $loop->index }}][device_qty]" value="{{ $item->device_qty }}" placeholder="რაოდენობა">
                                                 <select class="form-control mb-2" name="items[{{ $loop->index }}][discount_type]">
                                                     <option value="none">No Discount</option>
                                                     <option value="fixed" {{ $item->discount_type === 1 ? 'selected' : '' }}>ფიქსირებული თანხა</option>
@@ -137,120 +138,156 @@
         document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
     </script>
 
-    <script>
+<script>
 
-        const items = @json(route('getItems'));
+    const items = @json(route('getItems'));
+    const templateItems = @json(route('getTemplateItems'));
 
-        function addNewItem() {
-            var itemIndex = document.querySelectorAll('.item').length + 1;
-            var itemDiv = document.createElement('div');
-            itemDiv.classList.add('item');
-
-            var is_deghege = document.createElement('input');
-            is_deghege.type = 'checkbox';
-            is_deghege.name = 'items[' + itemIndex + '][is_deghege]';
-            itemDiv.appendChild(is_deghege);
+    let totalSum = 0;
 
 
-            var label = document.createElement('label');
-            label.innerText = 'დიპლომატიური /    ';
-            label.appendChild(is_deghege);
-            itemDiv.appendChild(label);
+    function addNewItem() {
+        var itemIndex = document.querySelectorAll('.item').length + 1;
+        var itemDiv = document.createElement('div');
+        itemDiv.classList.add('item');
 
-            var itemTitle = document.createElement('input');
-            itemTitle.type = 'text';
-            itemTitle.name = 'items[' + itemIndex + '][device_name]';
-            itemTitle.placeholder = 'ნივთის დასახელება';
-            itemTitle.classList.add('form-control', 'mb-2');
-            itemTitle.style.marginTop = '10px';
-            itemDiv.appendChild(itemTitle);
+        var is_deghege = document.createElement('input');
+        is_deghege.type = 'checkbox';
+        is_deghege.name = 'items[' + itemIndex + '][is_deghege]';
+        itemDiv.appendChild(is_deghege);
 
 
-            var itemArtikuliCode = document.createElement('input');
-            itemArtikuliCode.type = 'text';
-            itemArtikuliCode.name = 'items[' + itemIndex + '][device_artikuli_code]';
-            itemArtikuliCode.placeholder = 'ნივთის არტიკული კოდი';
-            itemArtikuliCode.classList.add('form-control', 'mb-2');
-            itemArtikuliCode.style.marginTop = '10px';
-            itemDiv.appendChild(itemArtikuliCode);
+        var label = document.createElement('label');
+        label.innerText = 'დიპლომატიური /    ';
+        label.appendChild(is_deghege);
+        itemDiv.appendChild(label);
 
-            var itemImeiCode = document.createElement('input');
-            itemImeiCode.type = 'text';
-            itemImeiCode.name = 'items[' + itemIndex + '][device_code]';
-            itemImeiCode.placeholder = 'ნივთის IMEI კოდი';
-            itemImeiCode.classList.add('form-control', 'mb-2');
-            itemImeiCode.style.marginTop = '10px';
-            itemDiv.appendChild(itemImeiCode);
 
-            var priceInput = document.createElement('input');
-            priceInput.type = 'text';
-            priceInput.name = 'items[' + itemIndex + '][device_price]';
-            priceInput.placeholder = 'ფასი';
-            priceInput.classList.add('form-control', 'mb-2');
-            itemDiv.appendChild(priceInput);
+        var itemTitle = document.createElement('input');
+        itemTitle.type = 'text';
+        itemTitle.name = 'items[' + itemIndex + '][device_name]';
+        itemTitle.placeholder = 'ნივთის დასახელება';
+        itemTitle.classList.add('form-control', 'mb-2');
+        itemTitle.style.marginTop = '10px';
+        itemDiv.appendChild(itemTitle);
 
-            var discountTypeSelect = document.createElement('select');
-            discountTypeSelect.name = 'items[' + itemIndex + '][discount_type]';
-            discountTypeSelect.classList.add('form-control', 'mb-2');
-            discountTypeSelect.innerHTML = `
-                <option value="none">No Discount</option>
-                <option value="fixed">ფიქსირებული თანხა</option>
-                <option value="percentage">პროცენტი</option>
-            `;
-            itemDiv.appendChild(discountTypeSelect);
 
-            var discountPrice = document.createElement('input');
-            discountPrice.type = 'text';
-            discountPrice.name = 'items[' + itemIndex + '][device_discounted_price]';
-            discountPrice.placeholder = 'ფასდაკლება';
-            discountPrice.classList.add('form-control', 'mb-2');
-            itemDiv.appendChild(discountPrice);
+        var itemArtikuliCode = document.createElement('input');
+        itemArtikuliCode.type = 'text';
+        itemArtikuliCode.name = 'items[' + itemIndex + '][device_artikuli_code]';
+        itemArtikuliCode.placeholder = 'ნივთის არტიკული კოდი';
+        itemArtikuliCode.classList.add('form-control', 'mb-2');
+        itemArtikuliCode.style.marginTop = '10px';
+        itemDiv.appendChild(itemArtikuliCode);
 
-            var removeButton = document.createElement('button');
-            removeButton.type = 'button';
-            removeButton.innerText = 'წაშლა';
-            removeButton.classList.add('btn', 'btn-danger', 'mb-2');
-            removeButton.onclick = function() {
-                itemDiv.remove();
-            };
-            itemDiv.appendChild(removeButton);
 
-            document.getElementById('invoice-items').appendChild(itemDiv);
-        }
+        var itemImeiCode = document.createElement('input');
+        itemImeiCode.type = 'text';
+        itemImeiCode.name = 'items[' + itemIndex + '][device_code]';
+        itemImeiCode.placeholder = 'ნივთის IMEI კოდი';
+        itemImeiCode.classList.add('form-control', 'mb-2');
+        itemImeiCode.style.marginTop = '10px';
+        itemDiv.appendChild(itemImeiCode);
 
-        function removeItem(btn) {
-            btn.closest('.item').remove();
-        }
-    </script>
+        var priceInput = document.createElement('input');
+        priceInput.type = 'text';
+        priceInput.name = 'items[' + itemIndex + '][device_price]';
+        priceInput.placeholder = 'ფასი';
+        priceInput.classList.add('form-control', 'mb-2');
+        itemDiv.appendChild(priceInput);
+
+        var qtyInput = document.createElement('input');
+        qtyInput.type = 'number';
+        qtyInput.name = 'items[' + itemIndex + '][device_qty]';
+        qtyInput.placeholder = 'რაოდენობა';
+        qtyInput.classList.add('form-control', 'mb-2');
+        qtyInput.value = 1;
+        qtyInput.min = 1;
+        itemDiv.appendChild(qtyInput);
+
+        var discountTypeSelect = document.createElement('select');
+        discountTypeSelect.name = 'items[' + itemIndex + '][discount_type]';
+        discountTypeSelect.classList.add('form-control', 'mb-2');
+        discountTypeSelect.innerHTML = `
+            <option value="none">No Discount</option>
+            <option value="fixed">ფიქსირებული თანხა</option>
+            <option value="percentage">პროცენტი</option>
+        `;
+        itemDiv.appendChild(discountTypeSelect);
+
+        var discountPrice = document.createElement('input');
+        discountPrice.type = 'text';
+        discountPrice.name = 'items[' + itemIndex + '][device_discounted_price]';
+        discountPrice.placeholder = 'ფასდაკლება';
+        discountPrice.classList.add('form-control', 'mb-2');
+        itemDiv.appendChild(discountPrice);
+
+        var templateSelect = document.createElement('select');
+        templateSelect.name = 'items[' + itemIndex + '][template_item]';
+        templateSelect.id = "my-select-id";
+        templateSelect.classList.add('form-control', 'mb-2');
+        fetch(templateItems)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(template => {
+                    var option = document.createElement('option');
+                    option.value = template.id
+                    option.text = template.title
+                    templateSelect.appendChild(option);
+                });
+        });
+        itemDiv.appendChild(templateSelect);
+
+        var removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.innerText = 'წაშლა';
+        removeButton.classList.add('btn', 'btn-danger', 'mb-2');
+        removeButton.onclick = function() {
+            itemDiv.remove();
+        };
+        itemDiv.appendChild(removeButton);
+
+        document.getElementById('invoice-items').appendChild(itemDiv);
+    }
+
+</script>
 
 <script>
-    function calculateTotal() {
-        let totalSum = 0;
+function calculateTotal() {
+    let totalSum = 0;
 
-        document.querySelectorAll('.item').forEach(item => {
-            const priceInput = item.querySelector('input[name^="items["][name$="][device_price]"]');
-            const discountTypeSelect = item.querySelector('select[name^="items["][name$="][discount_type]"]');
-            const discountPriceInput = item.querySelector('input[name^="items["][name$="][device_discounted_price]"]');
-            const is_deghege = item.querySelector('input[name^="items["][name$="][is_deghege]"]');
+    document.querySelectorAll('.item').forEach(item => {
+        const priceInput = item.querySelector('input[name^="items["][name$="][device_price]"]');
+        const qtyInput = item.querySelector('input[name^="items["][name$="][device_qty]"]');
+        const discountTypeSelect = item.querySelector('select[name^="items["][name$="][discount_type]"]');
+        const discountPriceInput = item.querySelector('input[name^="items["][name$="][device_discounted_price]"]');
+        const is_deghege = item.querySelector('input[name^="items["][name$="][is_deghege]"]');
 
-            let price = parseFloat(priceInput.value) || 0;
-            const discountType = discountTypeSelect.value;
-            let discount = parseFloat(discountPriceInput.value) || 0;
+        let price = parseFloat(priceInput.value) || 0;
+        const quantity = parseInt(qtyInput.value) || 1; // Default quantity to 1 if not specified
+        const discountType = discountTypeSelect.value;
+        let discount = parseFloat(discountPriceInput.value) || 0;
 
-            if (is_deghege.checked) {
-                price = price / 1.18;
-            }
+        if (is_deghege.checked) {
+            price = price / 1.18;
+        }
 
-            if (discountType === 'percentage') {
-                discount = (discount / 100) * price;
-            }
+        let totalPrice = price * quantity;
 
-            totalSum += price - discount;
-        });
+        if (discountType === 'percentage') {
+            discount = (discount / 100) * totalPrice;
+        } else if (discountType === 'fixed') {
+            discount = discount;
+        } else {
+            discount = 0;
+        }
 
-        // Update the total sum wherever you want to display it
-        $('#price-text').text('ფასი: ' + totalSum.toFixed(2)).css('display', 'block');
-        console.log(totalSum);
-    }
+        totalSum += totalPrice - discount;
+    });
+
+    // Update the total sum wherever you want to display it
+    $('#price-text').text('ფასი: ' + totalSum.toFixed(2)).css('display', 'block');
+    console.log(totalSum);
+}
 </script>
 @endsection

@@ -26,6 +26,7 @@ class UpdateTemplateRequest extends FormRequest
         return [
             'title' => 'required',
             'description' => 'required',
+            'warranty_lenght' => 'sometimes',
         ];
     }
 }

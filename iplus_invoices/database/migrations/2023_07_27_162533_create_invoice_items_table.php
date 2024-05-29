@@ -24,6 +24,7 @@ class CreateInvoiceItemsTable extends Migration
             $table->string('device_artikuli_code')->nullable();
             $table->string('device_name')->nullable();
             $table->decimal('device_price', 10, 2)->nullable();
+            $table->integer('device_qty')->default(0);
             $table->decimal('device_discounted_price', 10, 2)->nullable();
             $table->decimal('device_total_price', 10, 2)->nullable();
             $table->timestamps();

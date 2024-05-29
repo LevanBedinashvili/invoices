@@ -172,6 +172,15 @@
             priceInput.classList.add('form-control', 'mb-2');
             itemDiv.appendChild(priceInput);
 
+            var qtyInput = document.createElement('input');
+            qtyInput.type = 'number';
+            qtyInput.name = 'items[' + itemIndex + '][device_qty]';
+            qtyInput.placeholder = 'რაოდენობა';
+            qtyInput.classList.add('form-control', 'mb-2');
+            qtyInput.value = 1;
+            qtyInput.min = 1;
+            itemDiv.appendChild(qtyInput);
+
             var discountTypeSelect = document.createElement('select');
             discountTypeSelect.name = 'items[' + itemIndex + '][discount_type]';
             discountTypeSelect.classList.add('form-control', 'mb-2');
@@ -225,11 +234,13 @@
 
         document.querySelectorAll('.item').forEach(item => {
             const priceInput = item.querySelector('input[name^="items["][name$="][device_price]"]');
+            const qtyInput = item.querySelector('input[name^="items["][name$="][device_qty]"]');
             const discountTypeSelect = item.querySelector('select[name^="items["][name$="][discount_type]"]');
             const discountPriceInput = item.querySelector('input[name^="items["][name$="][device_discounted_price]"]');
             const is_deghege = item.querySelector('input[name^="items["][name$="][is_deghege]"]');
 
             let price = parseFloat(priceInput.value) || 0;
+            const quantity = parseInt(qtyInput.value) || 1; // Default quantity to 1 if not specified
             const discountType = discountTypeSelect.value;
             let discount = parseFloat(discountPriceInput.value) || 0;
 
@@ -237,11 +248,17 @@
                 price = price / 1.18;
             }
 
+            let totalPrice = price * quantity;
+
             if (discountType === 'percentage') {
-                discount = (discount / 100) * price;
+                discount = (discount / 100) * totalPrice;
+            } else if (discountType === 'fixed') {
+                discount = discount;
+            } else {
+                discount = 0;
             }
 
-            totalSum += price - discount;
+            totalSum += totalPrice - discount;
         });
 
         // Update the total sum wherever you want to display it

@@ -43,6 +43,10 @@
                                         <label class="form-label">აღწერა</label>
                                         <textarea name="description" width="100%;" id="editor">{{ $edit_template->description }}</textarea>
                                     </div>
+                                    <div class="mb-3 col-md-12">
+                                        <label class="form-label">ვადა</label>
+                                        <input type="text" name="warranty_lenght" class="form-control" width="100%;" value="{{ $edit_template->warranty_lenght }}">
+                                    </div>
                                 </div>
                                 <button type="submit" class="btn btn-success">რედაქტირება</button>
                             </form>

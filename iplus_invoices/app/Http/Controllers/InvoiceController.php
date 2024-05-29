@@ -82,16 +82,13 @@ class InvoiceController extends Controller
 
         foreach ($items as $item) {
             $is_deghege_checked = 0;
-            $deviceTotalPrice = $item['device_price'];
+            $item['device_qty'] = $item['device_qty'] < 1 ? 1 : $item['device_qty'];
+            $deviceTotalPrice = $item['device_price'] * $item['device_qty'];
             $discount_type = 0;
 
-            if(isset($item['is_deghege'])) {
+            if (isset($item['is_deghege'])) {
                 $deviceTotalPrice = $deviceTotalPrice / 1.18;
                 $is_deghege_checked = 1;
-            }
-            else {
-                $deviceTotalPrice;
-                $is_deghege_checked = 0;
             }
 
             $discountType = $item['discount_type'];
@@ -103,23 +100,20 @@ class InvoiceController extends Controller
             } elseif ($discountType === 'percentage') {
                 $discount_type = 2;
                 $deviceTotalPrice = $deviceTotalPrice - ($deviceTotalPrice * ($discountAmount / 100));
-            } else {
-                // No discount
-                $discount_type = 0;
             }
 
             $invoiceItemData = [
-                'device_name' =>  $item['device_name'],
+                'device_name' => $item['device_name'],
                 'device_code' => $item['device_code'],
-                'device_artikuli_code' =>  $item['device_artikuli_code'],
+                'device_artikuli_code' => $item['device_artikuli_code'],
                 'device_price' => $item['device_price'],
+                'device_qty' => $item['device_qty'],
                 'is_deghege' => $is_deghege_checked,
                 'product_id' => null,
                 'discount_type' => $discount_type,
                 'device_discounted_price' => $item['device_discounted_price'],
                 'device_total_price' => $deviceTotalPrice,
                 'template_id' => $item['template_item'],
-
             ];
 
             $invoice->items()->create($invoiceItemData);
@@ -135,8 +129,8 @@ class InvoiceController extends Controller
             $sagarantio->device_name = $item['device_name'];
             $sagarantio->invoice_id = $invoice->id;
             $sagarantio->save();
-
         }
+
         $notificationMessage = 'დაამატა ინვოისი უნიკალური ნომრით - ' . $invoice->id;
         $notification = new Notification([
             'user_id' => $user->id,
@@ -147,6 +141,7 @@ class InvoiceController extends Controller
 
         return redirect()->route('invoice.show', $invoice->id)->with('Success', 'ინვოისი წარმატებით დაემატა !');
     }
+
     /**
      * Display the specified resource.
      *
@@ -184,16 +179,17 @@ class InvoiceController extends Controller
     public function update(Request $request, Invoice $invoice)
     {
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'personal_number' => 'required|string|max:255',
-            'mobile_number' => 'required|string|max:255',
+            'first_name' => 'sometimes|string|max:255',
+            'last_name' => 'reqsometimesuired|string|max:255',
+            'personal_number' => 'sometimes|string|max:255',
+            'mobile_number' => 'sometimes|string|max:255',
             'date_of_birth' => 'nullable|date',
             'branch_id' => 'required',
             'payment_type_id' => 'required',
             'comment' => 'sometimes',
             'items' => 'required|array',
             'items.*.device_price' => 'required|numeric|min:0',
+            'items.*.device_qty' => 'required|integer|min:1',
         ]);
 
         $invoice->update([
@@ -213,16 +209,14 @@ class InvoiceController extends Controller
         foreach ($request->input('items') as $itemData) {
 
             $is_deghege_checked = 0;
-            $device_total_price = $itemData['device_price'];
+            $itemData['device_qty'] = $itemData['device_qty'] < 1 ? 1 : $itemData['device_qty'];
+
+            $device_total_price = $itemData['device_price'] * $itemData['device_qty'];
             $discount_type = 0;
 
-            if(isset($itemData['is_deghege'])) {
+            if (isset($itemData['is_deghege'])) {
                 $device_total_price = $device_total_price / 1.18;
                 $is_deghege_checked = 1;
-            }
-            else {
-                $device_total_price;
-                $is_deghege_checked = 0;
             }
 
             $discountType = $itemData['discount_type'];
@@ -234,10 +228,6 @@ class InvoiceController extends Controller
             } elseif ($discountType === 'percentage') {
                 $discount_type = 2;
                 $device_total_price = $device_total_price - ($device_total_price * ($discountAmount / 100));
-            } else {
-
-                $discount_type = 0;
-                $device_total_price;
             }
 
             if (isset($itemData['id']) && in_array($itemData['id'], $existingItemIds)) {
@@ -247,6 +237,7 @@ class InvoiceController extends Controller
                     'device_name' => $itemData['device_name'],
                     'device_code' => $itemData['device_code'],
                     'device_price' => $itemData['device_price'],
+                    'device_qty' => $itemData['device_qty'],
                     'device_artikuli_code' => $itemData['device_artikuli_code'],
                     'product_id' => null,
                     'device_discounted_price' => $itemData['device_discounted_price'],
@@ -260,6 +251,7 @@ class InvoiceController extends Controller
                     'device_name' => $itemData['device_name'],
                     'device_code' => $itemData['device_code'],
                     'device_price' => $itemData['device_price'],
+                    'device_qty' => $itemData['device_qty'],
                     'device_artikuli_code' => $itemData['device_artikuli_code'],
                     'product_id' => null,
                     'device_discounted_price' => $itemData['device_discounted_price'],
@@ -284,6 +276,7 @@ class InvoiceController extends Controller
 
         return redirect()->route('invoice.show', $invoice->id)->with('Success', 'ინვოისი წარმატებით განახლდა !');
     }
+
 
     /**
      * Remove the specified resource from storage.

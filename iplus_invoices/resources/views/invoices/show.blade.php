@@ -65,7 +65,7 @@
                                                 <th class="fw-bold">მოწყობილობა</th>
                                                 <th class="fw-bold">IMEI კოდი </th>
                                                 <th class="fw-bold">არტიკული კოდი</th>
-                                                <th class="fw-bold">ფასი | საბოლოო ფასი </th>
+                                                <th class="fw-bold">ფასი | რაოდენობა | საბოლოო ფასი </th>
                                                 <th class="text-end fw-bold" style="width: 120px;">ფასდაკლება ₾/%</th>
                                             </tr>
                                         </thead><!-- end thead -->
@@ -81,7 +81,7 @@
                                             </td>
                                             <td style="font-size: 10px;">{{ $item->device_code }}</td>
                                             <td style="font-size: 10px;">{{ $item->device_artikuli_code }}</td>
-                                            <td style="font-size: 10px;">{{ $item->device_price }} | {{ $item->device_total_price}} </td>
+                                            <td style="font-size: 10px;">{{ $item->device_price }} | {{ $item->device_qty }} | {{ $item->device_total_price}} </td>
 
                                             <td class="text-end" style="font-size: 12px;">{{ $item->device_discounted_price }} @if($item->discount_type == 1) ლარი @elseif($item->discount_type == 2) პროცენტი @else არ აქვს @endif</td>
                                         </tr>

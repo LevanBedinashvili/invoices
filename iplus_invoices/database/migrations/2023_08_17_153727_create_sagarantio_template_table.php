@@ -18,6 +18,7 @@ class CreateSagarantioTemplateTable extends Migration
 
             $table->string('title')->nullable();
             $table->text('description')->nullable();
+            $table->text('warranty_lenght')->nullable();
         });
     }
 

@@ -94,6 +94,10 @@
                                             <label class="form-label">აღწერა</label>
                                             <textarea name="description" id="editor"></textarea>
                                         </div>
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">ვადა</label>
+                                            <input type="text"  class="form-control" name="warranty_lenght" ></textarea>
+                                        </div>
                                     </div>
 
                                     <button type="submit" class="btn btn-success">დამატება</button>
