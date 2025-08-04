@@ -32,10 +32,14 @@
     <!-- App Css-->
     <link href="{{ asset('template/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
 
+    <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/archyedt-bold/css/archyedt-bold.min.css">
+
+
 
     <style>
         * {
-            font-family: "BPG Square Mtavruli", sans-serif !important;
+            font-family: "ArchyEDT-Bold", sans-serif !important;
+
         }
     </style>
 
@@ -57,7 +61,7 @@
                                     <img src="{{ asset('template/azx_crat-75.jpg') }}" alt="" width="100px;" >
                                 </span>
                         <span class="logo-lg">
-                                    <img src="{{ asset('template/azx_crat-75.jpg') }}" alt="" height="26" width="100px;">
+                                    <img src="{{ asset(path: 'template/azx_crat-75.jpg') }}" alt="" height="26" width="100px;">
                                 </span>
                     </a>
 

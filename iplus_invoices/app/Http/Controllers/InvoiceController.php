@@ -10,12 +10,34 @@ use App\Models\Notification;
 use App\Models\Branch;
 use App\Models\Payment_type;
 use App\Models\Product;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
+    public function sendSignSms(Request $request, $id)
+    {
+        $invoice = Invoice::findOrFail($id);
+        
+        if (!$invoice->phone_number) {
+            return back()->with('error', 'ნომერი არ არის მითითებული!');
+        }
+
+        $url = url("/invoice/sign/{$invoice->uuid}");
+        $message = "თქვენი ინვოისი: $url";
+        
+        $sms = new SmsService();
+        $response = $sms->send($invoice->phone_number, $message, $invoice->id);
+        
+        if (($response['status'] ?? '') === 'sent') {
+            return back()->with('success', 'SMS წარმატებით გაიგზავნა!');
+        }
+        
+        return back()->with('error', 'SMS გაგზავნა ვერ მოხერხდა!');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -128,6 +150,7 @@ class InvoiceController extends Controller
             $sagarantio->device_imei_code = $item['device_code'];
             $sagarantio->device_name = $item['device_name'];
             $sagarantio->invoice_id = $invoice->id;
+            $sagarantio->mobile_number = $requestData['mobile_number'] ?? null;
             $sagarantio->save();
         }
 

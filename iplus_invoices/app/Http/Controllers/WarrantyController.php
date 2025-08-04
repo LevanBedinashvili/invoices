@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
+use App\Services\SmsService;
+
 class WarrantyController extends Controller
 {
     /**
@@ -129,18 +131,22 @@ class WarrantyController extends Controller
         return redirect()->route('warranty.index')->with('Success', 'მონაცემთა ბაზა წარმატებით განახლდა');
     }
 
+
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
+     * Send signing SMS with public link to user (admin panel action)
      */
-    public function destroy($id)
+    public function sendSignSms($id)
     {
         $warranty = Warranty::findOrFail($id);
-
-        $warranty->delete();
-
-        return redirect()->back()->with('Success', 'საგარანტიო  წარმატებით წაიშალა მონაცემთა ბაზიდან');
+        // Generate uuid if not exists
+        if (!$warranty->uuid) {
+            $warranty->uuid = Warranty::generateSignToken();
+            $warranty->save();
+        }
+        $link = url('/warranty/sign/' . $warranty->uuid);
+        $text = "თქვენი საგარანტიო დოკუმენტი: {$link}";
+        $sms = new SmsService();
+        $sms->send($warranty->phone_number, $text, $warranty->id);
+        return back()->with('success', 'SMS წარმატებით გაიგზავნა!');
     }
 }

@@ -9,24 +9,24 @@
                             <div class="row">
                                 <div class="col-sm-6" >
                                     <div class="text-muted" >
-                                        <h6 class="">საგარანტიოს ინფორმაცია:</h6>
-                                        <p style="font-size: 12px;" class="mb-1">გარანტიის ვადა: {{ $get_warranty->template->warranty_lenght}}</p>
-                                        <p style="font-size: 12px;" class="mb-1">თარიღი: {{ $get_warranty->created_at }}</p>
+                                        <h6 style="font-size: 10px; " class="">ინფორმაცია:</h6>
+                                        <p style="font-size: 9px; color: black;" class="mb-1">გარანტიის ვადა: {{ $get_warranty->template->warranty_lenght}}</p>
+                                        <p style="font-size: 9px; color: black;" class="mb-1">თარიღი: {{ $get_warranty->created_at }}</p>
+                                        <p style="font-size: 9px; color: black;" class="mb-1">პირადი ნომერი: {{ $get_warranty->personal_number }}</p>
+
                                     </div>
                                 </div>
                                 <div class="col-sm-6" style="text-align: end;">
                                     <div class="text-muted" >
-                                        <h6 class="">მომხმარებლის ინფორმაცია:</h6>
-                                        <p style="font-size: 12px;" class="mb-1">სახელი, გვარი: {{ $get_warranty->first_name }} {{ $get_warranty->last_name }}</p>
-                                        <p style="font-size: 12px;" class="mb-1">პირადი ნომერი: {{ $get_warranty->personal_number }}</p>
-                                        <p style="font-size: 12px;" class="mb-1">პროდუქტის დასახელება: {{ $get_warranty->device_name }}</p>
-                                        <p style="font-size: 12px;" class="mb-1">პროდუქტის IMEI: {{ $get_warranty->device_imei_code }}</p>
+                                        <p style="font-size: 9px; color: black;" class="mb-1">სახელი, გვარი: {{ $get_warranty->first_name }} {{ $get_warranty->last_name }}</p>
+                                        <p style="font-size: 9px; color: black;" class="mb-1">პროდუქტის დასახელება: {{ $get_warranty->device_name }}</p>
+                                        <p style="font-size: 9px; color: black;" class="mb-1">პროდუქტის IMEI: {{ $get_warranty->device_imei_code }}</p>
                                     </div>
                                 </div>
                                 <!-- end col -->
                             </div>
                             <!-- end row -->
-                            <div style="margin-top: 50px;">
+                            <div>
                                 <div style="font-size: 9px;">
                                     {!! $get_warranty->template->description !!}
                                 </div>
@@ -34,6 +34,7 @@
                             </div>
                             <div class="d-print-none mt-4">
                                 <div class="float-end">
+                                    <a href="{{ route('warranty.pdf', $get_warranty->id) }}" class="btn btn-primary me-1">PDF გადმოწერა</a>
                                     <a href="javascript:window.print()" class="btn btn-success me-1">საგარანტიო</a>
                                 </div>
                             </div>

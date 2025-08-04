@@ -88,8 +88,10 @@
                                         <th>პროდუქტის IMEI კოდი</th>
                                         <th>ფილიალი</th>
                                         <th>თარიღი</th>
+                                        <th>სტატუსი</th>
                                         <th>ამობეჭდვა</th>
                                         <th>რედაქტირება</th>
+                                        <th>SMS გაგზავნა</th>
 {{--                                        <th>წაშლა</th>--}}
                                     </tr>
                                     </thead>
@@ -103,12 +105,25 @@
                                             <td>{{ $warranty_item->device_imei_code }}</td>
                                             <td>{{ $warranty_item->branch->branch_name }}</td>
                                             <td>{{ $warranty_item->created_at }}</td>
+                                            <td>
+                                                @if($warranty_item->is_signed)
+                                                    <span style="color: #22c55e; font-weight: 600;">ხელმოწერილია</span>
+                                                @else
+                                                    <span style="color: #ef4444; font-weight: 600;">გაგზავნილი</span>
+                                                @endif
+                                            </td>
                                             <td><a href="{{ route('warranty.show', $warranty_item->id) }}" class="btn btn-info">საგარანტიო</a></td>
                                             <td>
                                                 <div class="d-flex">
                                                     <a href="{{ route('warranty.edit', $warranty_item->id) }}"
                                                        class="btn btn-primary shadow btn-xs sharp me-1">რედაქტირება</a>
                                                 </div>
+                                            </td>
+                                            <td>
+                                                <form method="POST" action="{{ route('warranty.sendSignSms', $warranty_item->id) }}" style="display:inline;">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-warning btn-xs">SMS გაგზავნა</button>
+                                                </form>
                                             </td>
 {{--                                            <td>--}}
 {{--                                                <div class="d-flex">--}}

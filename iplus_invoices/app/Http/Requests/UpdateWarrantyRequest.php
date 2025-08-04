@@ -31,6 +31,8 @@ class UpdateWarrantyRequest extends FormRequest
             'device_name' => ['sometimes'],
             'branch_id' => ['required'],
             'template_id' => ['required'],
+            'phone_number' => ['required', 'string', 'min:9'],
+            'personal_email' => ['required', 'email'],
         ];
     }
 }

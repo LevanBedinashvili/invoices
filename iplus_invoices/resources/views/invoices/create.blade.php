@@ -48,6 +48,11 @@
                                             <label class="form-label">მომხმარებლის პირადი ნომერი</label>
                                             <input type="text" class="form-control" name="personal_number" placeholder="შეიყვანეთ მომხმარებლის პირადი ნომერი">
                                         </div>
+                                        
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">მომხმარებლის ელ-ფოსტა</label>
+                                            <input type="email" class="form-control" name="personal_email" placeholder="შეიყვანეთ ელ-ფოსტა">
+                                        </div>
                                         <div class="mb-3 col-md-6">
                                             <label class="form-label">მომხმარებლის მობილურის ნომერი</label>
                                             <input type="number" class="form-control" name="mobile_number" placeholder="შეიყვანეთ მომხმარებლის ტელეფონის ნომერი">

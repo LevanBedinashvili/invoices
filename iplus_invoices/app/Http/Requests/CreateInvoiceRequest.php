@@ -32,6 +32,7 @@ class CreateInvoiceRequest extends FormRequest
             'payment_type_id' => 'required',
             'branch_id' => 'required',
             'comment' => 'sometimes',
+            'personal_email' => ['required', 'email'],
         ];
     }
 }

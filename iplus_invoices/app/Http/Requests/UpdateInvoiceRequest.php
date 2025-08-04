@@ -31,6 +31,7 @@ class UpdateInvoiceRequest extends FormRequest
             'date_of_birth' => 'sometimes',
             'payment_type_id' => 'required',
             'branch_id' => 'required',
+            'personal_email' => ['required', 'email'],
         ];
     }
 }

@@ -14,6 +14,10 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\GetProductItemController;
 use App\Http\Controllers\SmsController;
 use App\Http\Controllers\FilterController;
+use App\Http\Controllers\WarrantyPdfController;
+use App\Http\Controllers\WarrantySignController;
+use App\Http\Controllers\InvoiceSignController;
+use App\Http\Controllers\InvoicePdfController;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/product', ProductsController::class);
     Route::resource('/payment',  PaymentController::class);
     Route::resource('/warranty', WarrantyController::class);
+    Route::post('/warranty/{id}/send-sign-sms', [WarrantyController::class, 'sendSignSms'])->name('warranty.sendSignSms');
     Route::resource('/templates', WarrantyTemplateController::class);
     Route::resource('/invoice', InvoiceController::class);
     Route::get('/getItems', [GetProductItemController::class, 'getItems'])->name('getItems');;
@@ -56,3 +61,20 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/loginout',[LogoutController::class, 'logout'])->name('user.logout');
 });
+
+
+// Public ხელმოწერის გვერდი უნიკალური ლინკით
+Route::get('/warranty/sign/{uuid}', [WarrantySignController::class, 'show'])->name('warranty.sign.public');
+Route::post('/warranty/sign/{uuid}/send-sms', [WarrantySignController::class, 'sendSms'])->name('warranty.sign.sendSms');
+Route::post('/warranty/sign/{uuid}/verify', [WarrantySignController::class, 'verify'])->name('warranty.sign.verify');
+Route::get('/warranty/pdf/{uuid}', [WarrantySignController::class, 'downloadPdf'])->name('warranty.downloadPdf');
+Route::get('/warranty/{id}/pdf', [WarrantyPdfController::class, 'download'])->name('warranty.pdf');
+
+// Public ინვოისის ხელმოწერის გვერდი უნიკალური ლინკით
+Route::get('/invoice/sign/{uuid}', [InvoiceSignController::class, 'show'])->name('invoice.sign.show');
+Route::post('/invoice/sign/{uuid}/send-sms', [InvoiceSignController::class, 'sendSms'])->name('invoice.sign.sendSms');
+Route::post('/invoice/sign/{uuid}/verify', [InvoiceSignController::class, 'verify'])->name('invoice.sign.verify');
+Route::get('/invoice/pdf/{uuid}', [InvoiceSignController::class, 'downloadPdf'])->name('invoice.downloadPdf');
+Route::post('/invoice/{id}/send-sign-sms', [InvoiceController::class, 'sendSignSms'])->name('invoice.sendSignSms');
+Route::get('/invoice/{id}/pdf', [InvoicePdfController::class, 'download'])->name('invoice.pdf');
+Route::get('/warranty/{id}/preview', [WarrantyPdfController::class, 'preview'])->name('warranty.preview');

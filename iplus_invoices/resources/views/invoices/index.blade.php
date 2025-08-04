@@ -78,9 +78,11 @@
                                         <th>პირადი ნომერი</th>
                                         <th>გადახდის ტიპი</th>
                                         <th>თარიღი</th>
+                                        <th>სტატუსი</th>
                                         <th>ახალი</th>
                                         <th>ინვოისი</th>
                                         <th>რედაქტირება</th>
+                                        <th>SMS გაგზავნა</th>
 {{--                                        <th>წაშლა</th>--}}
                                     </tr>
                                     </thead>
@@ -94,6 +96,13 @@
                                             <td>{{ $invoice->payment_type->title }}</td>
                                             <td>{{ $invoice->created_at }}</td>
                                             <td>
+                                                @if($invoice->is_signed)
+                                                    <span style="color: #22c55e; font-weight: 600;">ხელმოწერილია</span>
+                                                @else
+                                                    <span style="color: #ef4444; font-weight: 600;">გაგზავნილი</span>
+                                                @endif
+                                            </td>
+                                            <td>
                                                 <a href="{{ route('invoice.createIfExists', $invoice->id) }}"
                                                    class="btn btn-warning shadow btn-xs sharp me-1">ახალი ინვოისი</a>
                                             </td>
@@ -104,6 +113,12 @@
                                             <td>
                                                 <a href="{{ route('invoice.edit', $invoice->id) }}"
                                                    class="btn btn-primary shadow btn-xs sharp me-1">რედაქტირება</a>
+                                            </td>
+                                            <td>
+                                                <form method="POST" action="{{ route('invoice.sendSignSms', $invoice->id) }}" style="display:inline;">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-warning btn-xs">SMS გაგზავნა</button>
+                                                </form>
                                             </td>
 {{--                                            <td>--}}
 {{--                                                <form action="{{ route('invoice.destroy', $invoice->id) }}" method="post">--}}

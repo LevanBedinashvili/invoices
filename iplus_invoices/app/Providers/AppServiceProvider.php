@@ -26,5 +26,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
+        // Fix for public path resolution (e.g., for DomPDF)
+        $publicPath = base_path('public');
+        $this->app->bind('path.public', function() use ($publicPath) {
+            return $publicPath;
+        });
     }
 }

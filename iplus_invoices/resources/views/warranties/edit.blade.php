@@ -48,6 +48,10 @@
                                         <input type="text" class="form-control" name="personal_number" value="{{ $edit_warranty_data->personal_number }}" placeholder="შეიყვანეთ მომხმარებლის პირადი ნომერი">
                                          </div>
                                     <div class="mb-3 col-md-6">
+                                        <label class="form-label">მომხმარებლის ტელეფონის ნომერი</label>
+                                        <input type="text" class="form-control" name="phone_number" value="{{ $edit_warranty_data->phone_number }}" placeholder="შეიყვანეთ ტელეფონის ნომერი">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
                                         <label class="form-label">პროდუქტის IMEI კოდი</label>
                                         <input type="text" class="form-control" name="device_imei_code" value="{{ $edit_warranty_data->device_imei_code }}" placeholder="შეიყვანეთ პროდუქტის IMEI კოდი">
                                     </div>
@@ -76,6 +80,10 @@
                                             <option disabled>დიზაინი არ მოიძებნა</option>
                                             @endforelse
                                         </select>
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">მომხმარებლის ელ-ფოსტა</label>
+                                        <input type="email" class="form-control" name="personal_email" value="{{ $edit_warranty_data->personal_email }}" placeholder="შეიყვანეთ ელ-ფოსტა">
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">რედაქტირება</button>

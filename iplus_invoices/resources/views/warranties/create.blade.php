@@ -75,6 +75,15 @@
                                             @endforelse
                                         </select>
                                     </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">მომხმარებლის ტელეფონის ნომერი</label>
+                                        <input type="text" class="form-control" name="phone_number" placeholder="შეიყვანეთ ტელეფონის ნომერი">
+                                    </div>
+
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">მომხმარებლის ელ-ფოსტა</label>
+                                        <input type="email" class="form-control" name="personal_email" placeholder="შეიყვანეთ ელ-ფოსტა">
+                                    </div>
                                 </div>
                                 <button type="submit" class="btn btn-warning">საგარანტიოს დამატება</button>
                             </form>
